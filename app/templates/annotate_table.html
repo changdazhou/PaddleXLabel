@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8" />
+    <title>Annotation Interface</title>
+    <style>
+        html,body {height:100%;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #f0f4ff 0%, #f9fafb 100%);
+            color: #22223b;
+            min-height: 100vh;
+        }
+        /* Progress Bar */
+        #progress-bar-container {
+            background: #eef2ff;
+            height: 28px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.07);
+            margin: 24px 32px 16px 32px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        #progress-bar {
+            background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+            height: 100%;
+            color: #fff;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: width 0.5s cubic-bezier(.33,1.39,.93,1);
+            border-radius: 16px;
+            box-shadow: 0 0 10px rgba(59,130,246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #progress-text {
+            margin-left: 14px;
+            margin-right: 14px;
+            min-width: 60px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #4f46e5;
+            letter-spacing: 1px;
+        }
+        /* Main Container */
+        #container {
+            display: flex;
+            gap: 28px;
+            padding: 16px 32px 32px 32px;
+            height: calc(100vh - 150px);
+            min-height: 600px;
+            align-items: stretch;
+        }
+        /* Image Area */
+        #image-area {
+            flex: 0 0 30%; /* 占左侧 30% */
+            background: #fff;
+            border: 1.5px solid #e0e7ff;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 6px 24px rgba(79,70,229,0.10);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 30%;
+            min-height: 350px;
+        }
+        
+        #image-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            max-height: 80vh;
+            box-sizing: border-box;
+        }
+        
+        #current-image {
+            display: block;
+            max-width: 100%;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            border-radius: 9px;
+            box-shadow: 0 1px 8px rgba(59,130,246,0.08);
+        }
+        
+        /* Canvas */
+        #annotation-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            border-radius: 9px;
+            pointer-events: auto;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+        }
+        /* Controls */
+        #controls {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 330px;
+            max-width: 40%;
+        }
+        /* Control Block */
+        .control-block {
+            flex: 1;
+            background: linear-gradient(90deg,rgb(230, 230, 230) 60%,#f2f0f0 100%);
+            border-radius: 14px;
+            box-shadow: 0 6px 22px rgba(79,70,229,0.13);
+            padding: 6px 2px 0px 2px;
+            color: #fff;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+        .control-block-title {
+            font-size: 0.97rem;
+            font-weight: 600;
+            margin-bottom: 1px;
+            color: #4f46e5;
+            letter-spacing: 1px;
+        }
+        .row-btns {
+            display: flex;
+            width: 100%;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0; /* 增加一点填充以匹配按钮高度 */
+        }
+        .control-button {
+            background: linear-gradient(90deg,#6366f1 60%,#8b5cf6 100%);
+            color: #fff;
+            border: none;
+            padding: 13px 0;
+            font-size: 1.08rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.22s, box-shadow 0.22s;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.12);
+            flex: 1;
+            margin: 0 1px;
+            outline: none;
+            height: auto; /* 确保按钮高度是自动的 */
+            padding: 10px 0; /* 调整填充以匹配容器高度 */
+        }
+        .control-block.combo {
+            flex: 0 0 auto; /* 确保高度不自动扩展 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            height: auto; /* 将高度设置为自动 */
+        }
+        .control-button:hover {
+            background: linear-gradient(90deg,#4f46e5 70%,#6366f1 100%);
+            box-shadow: 0 4px 16px rgba(67,56,202,0.25);
+        }
+        .control-button:active {
+            background: #4f46e5;
+        }
+        .control-button:disabled {
+            background: #c7d2fe;
+            color: #fff;
+            cursor: not-allowed;
+        }
+        select.control-button {
+            background: #f4f6ff;
+            color: #4f46e5;
+            border: 1.5px solid #6366f1;
+            padding-left: 12px;
+            font-size: 1.08rem;
+            font-weight: 600;
+            flex: 2;
+        }
+        .single-button {
+            padding: 10px 0;
+            font-size: 1.08rem;
+            width: 100%;
+            margin-top: 7px;
+            flex: none;
+        }
+        #controls-table {
+            flex: 0 0 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 330px;
+            max-width: 40%;
+            height: 100%;
+        }
+        .table-preview {
+            flex: 1;
+            background: #fff;
+            color: #4f46e5;
+            border-radius: 7px;
+            min-height: 80px;
+            max-height: 40vh;
+            padding: 7px 0;
+            text-align: center;
+            font-size: 1.28rem;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.07);
+            word-break: break-all;
+            overflow-x: auto;
+        }
+        .radio-group {
+            margin-bottom: 20px;
+        }
+        
+        .radio-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1e40af;
+            display: block;
+        }
+        
+        .radio-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .radio-container {
+            display: flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 7px;
+            background: #f0f7ff;
+            border: 1.5px solid #4f46e5;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #1e40af;
+            justify-content: flex-start;
+        }
+        
+        .radio-container input[type="radio"] {
+            accent-color: #4f46e5;
+            width: 21px;
+            height: 21px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .radio-container label {
+            font-weight: 600;
+            align-items: center;
+            color: #4f46e5;
+            cursor: pointer;
+        }
+             
+        
+        textarea.table-edit {
+            flex: 1;
+            width: 100%;
+            min-height: 80px;
+            border-radius: 7px;
+            border: 1.5px solid #8b5cf6;
+            font-size: 1.14rem;
+            padding: 7px;
+            color: #222;
+            box-sizing: border-box;
+        }
+        /* Image List */
+        #image-list-window {
+            margin-top: 6px;
+            background: #fff;
+            border-radius: 11px;
+            box-shadow: 0 6px 22px rgba(79,70,229,0.11);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        #image-list-header {
+            background: linear-gradient(90deg,#6366f1 60%,#8b5cf6 100%);
+            color: #fff;
+            font-weight: 700;
+            padding: 12px 20px;
+            border-radius: 11px 11px 0 0;
+            letter-spacing: 1px;
+            font-size: 1.08rem;
+        }
+        #image-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+        }
+        #image-list li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.02rem;
+            transition: background 0.16s;
+        }
+        #image-list li:hover {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+        .status-tag {
+            font-size: 0.92rem;
+            font-weight: 600;
+            padding: 3px 11px;
+            border-radius: 14px;
+            margin-left: 7px;
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+        .status-annotated {
+            background: #22c55e;
+            color: #fff;
+        }
+        .status-unannotated {
+            background: #ef4444;
+            color: #fff;
+        }
+        /* Scrollbar */
+        #image-list::-webkit-scrollbar, #controls::-webkit-scrollbar {
+            width: 8px;
+        }
+        #image-list::-webkit-scrollbar-thumb, #controls::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 4px;
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            #container {
+                flex-direction: column;
+                padding: 16px;
+                gap: 18px;
+            }
+            #controls, #image-area {
+                min-width: 0;
+                max-width: none;
+                width: 100%;
+                margin: 0;
+                box-sizing: border-box;
+            }
+            #controls {
+                padding: 20px 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            #progress-bar-container { margin: 12px 3vw; }
+            #container { padding: 12px 2vw; }
+        }
+    </style>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+        integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div style="display: flex; align-items: center;">
+        <div id="progress-bar-container" style="flex:1;">
+            <div id="progress-bar"></div>
+        </div>
+        <span id="progress-text"></span>
+    </div>
+    <div id="container">
+        <!-- Image Area -->
+        <div id="image-area">
+            <div id="image-container">
+                <img id="current-image" src="{{ url_for('static', filename='images/' ~ image_names[0]) }}" alt="图片" />
+                <canvas id="annotation-canvas"></canvas>
+            </div>
+        </div>
+        <div id="controls-table">
+            <!-- Table Preview -->
+            <div class="control-block">
+                <div class="control-block-title">表格渲染预览</div>
+                <div id="table-preview" class="table-preview">(表格预览区)</div>
+            </div>
+            <div class="control-block">
+                <div class="control-block-title">表格修改文本框</div>
+                <textarea id="table-edit" class="table-edit" placeholder="输入HTML表格"></textarea>
+            </div>
+        </div>
+        <!-- Controls -->
+        <div id="controls">
+            <div class="control-block combo">
+                <!-- Line Options -->
+                <div class="radio-group">
+                    <label>表格框线类型：</label>
+                    <div class="radio-options">
+                        <label class="radio-container" for="full_line">
+                          <input type="radio" id="full_line" name="line" value="full_line" />
+                          全部框线
+                        </label>
+                        <label class="radio-container" for="wireless_line">
+                          <input type="radio" id="wireless_line" name="line" value="wireless_line" />
+                          无框线
+                        </label>
+                        <label class="radio-container" for="fewer_line">
+                          <input type="radio" id="fewer_line" name="line" value="fewer_line" />
+                          部分框线
+                        </label>
+                      </div>
+                </div>
+                <!-- Equation Options -->
+                <div class="radio-group">
+                    <label>表格是否包含公式：</label>
+                    <div class="radio-options">
+                      <!-- 改为用 label 包裹整个单选项 -->
+                      <label class="radio-container">
+                        <input type="radio" id="include_equation_true" name="include_equation" value="true" />
+                        <span class="custom-radio"></span>
+                        包含公式
+                      </label>
+                      <label class="radio-container">
+                        <input type="radio" id="include_equation_false" name="include_equation" value="false" />
+                        <span class="custom-radio"></span>
+                        不包含公式
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="radio-group">
+                    <label>表格是否包含图片：</label>
+                    <div class="radio-options">
+                      <label class="radio-container">
+                        <input type="radio" id="include_photo_true" name="include_photo" value="true" />
+                        <span class="custom-radio"></span>
+                        包含图片
+                      </label>
+                      <label class="radio-container">
+                        <input type="radio" id="include_photo_false" name="include_photo" value="false" />
+                        <span class="custom-radio"></span>
+                        不包含图片
+                      </label>
+                    </div>
+                  </div>
+            </div>
+            <div class="control-block combo">
+                <!-- 旧的按钮组改为单选按钮 -->
+                <div class="row-btns">
+                    <button class="control-button" onclick="previousPage()">上一页</button>
+                    <button class="control-button" onclick="nextPage()">下一页</button>
+                </div>
+            </div>
+            <!-- Save/Return -->
+            <button class="control-button single-button" onclick="saveAnnotations()">保存结果</button>
+            <button class="control-button single-button" onclick="returnToMainMenu()">返回主菜单</button>
+            <!-- Image List -->
+            <div id="image-list-window">
+                <div id="image-list-header">图片列表</div>
+                <ul id="image-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const caseTypes = {{ case_types|tojson }};
+        const imageData = {{ image_data|tojson }};
+        const imageNames = {{ image_names|tojson }};
+        let currentPage = 0;
+        let annotatedCount = 0;
+        let selectedBlock = null;
+        const canvas = document.getElementById('annotation-canvas');
+        const ctx = canvas.getContext('2d');
+        const image = document.getElementById('current-image');
+        let annotations = [];
+        let annotatedImages = [];
+
+        // New elements for table
+        const tablePreview = document.getElementById('table-preview');
+        const tableEdit = document.getElementById('table-edit');
+
+        function updateImage() {
+            image.src = "{{ url_for('static', filename='images/') }}" + imageNames[currentPage];
+            image.onload = () => {
+                canvas.width = image.clientWidth;
+                canvas.height = image.clientHeight;
+                document.querySelectorAll('input[name="include_photo"]').forEach(input => input.checked = false);
+                document.querySelectorAll('input[name="line"]').forEach(input => input.checked = false);
+                document.querySelectorAll('input[name="include_equation"]').forEach(input => input.checked = false);
+                loadAnnotations(imageNames[currentPage]);
+            };
+        }
+
+        function loadAnnotations(imageName) {
+            fetch(`/get_annotation?image_name=${encodeURIComponent(imageName)}&anno_type=table_info`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    annotations = data.parsing_res_list || [];
+                    annotations.forEach(ann => {
+                        ann.selected = false;
+                        if (typeof ann.is_concatenated === 'undefined') {
+                            ann.is_concatenated = false;
+                        }
+                    });        
+                    selectedBlock = null;
+                    drawAnnotations();
+                    // Clear the right-side form
+                    tableEdit.value = "";
+                    tablePreview.innerHTML = "";
+                })
+                .catch(error => console.error('Error fetching JSON:', error));
+        }
+
+        function drawAnnotations() {
+            const scaleX = image.clientWidth / image.naturalWidth;
+            const scaleY = image.clientHeight / image.naturalHeight;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            annotations.forEach(annotation => {
+                const [x1, y1, x2, y2] = annotation.block_bbox;
+                const block_label = annotation.block_label;
+                const selected = annotation.selected;
+                const scaledX1 = x1 * scaleX;
+                const scaledY1 = y1 * scaleY;
+                const scaledX2 = x2 * scaleX;
+                const scaledY2 = y2 * scaleY;
+                const Id = annotation.id + 1;
+            
+                if (block_label === 'table') {
+                    const hasFormulaType = annotation.line &&  annotation.line.trim() != "" && annotation.include_equation && annotation.include_equation.trim() != "" && annotation.include_photo && annotation.include_photo.trim() != "";
+                    ctx.lineWidth = selected ? 3 : 2;
+                    ctx.strokeStyle = hasFormulaType ? '#22c55e' : (selected ? '#ef4444' : '#3b82f6');
+                    ctx.fillStyle = hasFormulaType ? 'rgba(34, 197, 94, 0.15)' : (selected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)');
+                    ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+                    ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+            
+                    ctx.fillStyle = hasFormulaType ? '#16a34a' : (selected ? '#b91c1c' : '#2563eb');
+                } else {
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#999999';
+                    ctx.fillStyle = 'rgba(153, 153, 153, 0.15)';
+                    ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+                    ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+            
+                    ctx.fillStyle = '#999999';
+                }
+                ctx.font = 'bold 24px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.textAlign = 'left';
+                const textWidth = ctx.measureText(Id).width;
+                let textX = scaledX2 + 6;
+                const textY = scaledY1;
+                if (textX + textWidth > canvas.width) {
+                    textX = scaledX2 - textWidth - 6;
+                }
+                ctx.fillText(Id, textX, textY);
+            });
+        }
+
+        // Click on annotation-canvas to select a box and display table information on the right
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            let clickedIndex = null;
+
+            annotations.forEach((annotation, index) => {
+                const [x1, y1, x2, y2] = annotation.block_bbox.map((v, i) => {
+                    return i % 2 === 0 ? v * (canvas.width / image.naturalWidth) : v * (canvas.height / image.naturalHeight);
+                });
+                if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+                    clickedIndex = index;
+                }
+            });
+
+            if (clickedIndex !== null) {
+                annotations.forEach(ann => ann.selected = false);
+                annotations[clickedIndex].selected = true;
+                selectedBlock = clickedIndex;
+                const ann = annotations[clickedIndex];
+                const block_label = ann.block_label;
+                if (block_label === 'table') {
+                    tableEdit.value = ann.block_content || "";
+                    tablePreview.innerHTML = renderMathInTable(ann.block_content || "");
+                    // 根据已有值更新单选按钮
+                    if (ann.line) {
+                        document.querySelector(`input[name="line"][value="${ann.line}"]`).checked = true;
+                    } else {
+                        document.querySelectorAll('input[name="line"]').forEach(input => input.checked = false);
+                    }
+                    
+                    if (ann.include_equation) {
+                        document.querySelector(`input[name="include_equation"][value="${ann.include_equation}"]`).checked = true;
+                    } else {
+                        document.querySelectorAll('input[name="include_equation"]').forEach(input => input.checked = false);
+                    }
+                    
+                    if (ann.include_photo) {
+                        document.querySelector(`input[name="include_photo"][value="${ann.include_photo}"]`).checked = true;
+                    } else {
+                        document.querySelectorAll('input[name="include_photo"]').forEach(input => input.checked = false);
+                    }
+                }
+                drawAnnotations();
+            }
+        });
+
+        // Edit table HTML to sync preview and data
+        tableEdit.addEventListener('input', function() {
+            const tableHTML = this.value.trim();
+            tablePreview.innerHTML = renderMathInTable(tableHTML);
+        });
+
+        function saveAnnotations() {
+            const emptyTypeIds = annotations
+                .filter(ann => ann.block_label === "table" && (!ann.line || ann.line.trim() === "" && !ann.include_equation || ann.include_equation.trim() === "" && !ann.include_photo || ann.include_photo.trim() === ""))
+                .map(ann => ann.id + 1);
+            if (emptyTypeIds.length > 0) {
+                alert(`${emptyTypeIds.join(', ')} 的表格类型未选择，请选择后再保存。`);
+                return;
+            }
+
+            const currentImageName = imageNames[currentPage];
+            const isAlreadyAnnotated = annotatedImages.includes(currentImageName);
+            fetch('/save?anno_type=table_info', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    imageName: currentImageName,
+                    annotations: annotations
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!isAlreadyAnnotated) {
+                    annotatedImages.push(currentImageName);
+                    annotatedCount++;
+                }
+                renderImageList();
+                updateProgressBar();
+                nextPage();
+            })
+            .catch(error => {
+                alert('保存失败，请重试。');
+                console.error('Error:', error);
+            });
+        }
+
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateImage();
+                renderImageList();
+                updateProgressBar();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < imageNames.length - 1) {
+                currentPage++;
+                updateImage();
+                renderImageList();
+                updateProgressBar();
+            }
+        }
+
+        function renderMathInTable(tableHTML) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = tableHTML;
+        
+            // 解码HTML实体
+            const decodeHtmlEntities = (str) => {
+                const textarea = document.createElement('textarea');
+                textarea.innerHTML = str;
+                return textarea.value;
+            };
+        
+            // 为表格设置边框样式
+            const tables = tempDiv.querySelectorAll('table');
+            tables.forEach(table => {
+                table.style.borderCollapse = 'collapse'; // 合并边框
+                table.style.width = '100%'; // 设置表格宽度
+        
+                // 为表格的每个单元格添加边框样式
+                const cells = table.querySelectorAll('th, td');
+                cells.forEach(cell => {
+                    cell.style.border = '1px solid black'; // 设置单元格边框
+                    cell.style.padding = '8px'; // 设置单元格内边距
+                    cell.style.textAlign = 'left'; // 设置文本左对齐
+                });
+            });
+        
+            const cells = tempDiv.querySelectorAll('td');
+        
+            cells.forEach((cell) => {
+                let originalContent = cell.innerHTML;
+        
+                // 解码HTML实体
+                originalContent = decodeHtmlEntities(originalContent);
+        
+                // 使用正则表达式查找并替换公式
+                const latexRegex = /\$([^$]+)\$|\$\$([^$]+)\$\$/g;
+                let newContent = originalContent;
+        
+                // 替换公式为 KaTeX 渲染的内容
+                newContent = newContent.replace(latexRegex, (match, p1, p2) => {
+                    const latex = p1 || p2; // 确定是单个公式还是双重公式
+                    const displayMode = !!p2; // 如果有双重公式，则为 true
+        
+                    // 创建一个临时容器来渲染公式
+                    const tempSpan = document.createElement('span');
+                    try {
+                        katex.render(latex, tempSpan, {
+                            throwOnError: false,
+                            displayMode: displayMode
+                        });
+                        return tempSpan.innerHTML; // 返回渲染后的 HTML
+                    } catch (e) {
+                        return match; // 如果渲染失败，返回原始匹配
+                    }
+                });
+        
+                // 更新单元格内容
+                cell.innerHTML = newContent;
+            });
+        
+            return tempDiv.innerHTML;
+        }
+        
+
+
+        function selectNextUnlabeledBox(annotations) {
+            const nextIndex = annotations.findIndex(annotation => 
+                annotation.block_label === 'table' && 
+                (!annotation.line || annotation.line.trim() === "" && 
+                 !annotation.include_equation || annotation.include_equation.trim() === "" && 
+                 !annotation.include_photo || annotation.include_photo.trim() === "")
+            );
+        
+            if (nextIndex !== -1) {
+                // 清除当前选中状态
+                annotations.forEach(annotation => annotation.selected = false);
+        
+                // 选中下一个未标注的框
+                annotations[nextIndex].selected = true;
+                const ann = annotations[nextIndex];
+                const block_label = ann.block_label;
+                if (block_label === 'table') {
+                    tableEdit.value = ann.block_content || "";
+                    tablePreview.innerHTML = renderMathInTable(ann.block_content || "");
+        
+                    // 根据已有值更新单选按钮
+                    if (ann.line) {
+                        document.querySelector(`input[name="line"][value="${ann.line}"]`).checked = true;
+                    } else {
+                        document.querySelectorAll('input[name="line"]').forEach(input => input.checked = false);
+                    }
+                    
+                    if (ann.include_equation) {
+                        document.querySelector(`input[name="include_equation"][value="${ann.include_equation}"]`).checked = true;
+                    } else {
+                        document.querySelectorAll('input[name="include_equation"]').forEach(input => input.checked = false);
+                    }
+                    
+                    if (ann.include_photo) {
+                        document.querySelector(`input[name="include_photo"][value="${ann.include_photo}"]`).checked = true;
+                    } else {
+                        document.querySelectorAll('input[name="include_photo"]').forEach(input => input.checked = false);
+                    }
+                }
+                drawAnnotations();
+            } else {
+                saveAnnotations();
+            }
+        }      
+        
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progress-bar');
+            const textSpan = document.getElementById('progress-text');
+            const progressPercent = (annotatedCount / imageNames.length) * 100;
+
+            progressBar.style.width = `${progressPercent}%`;
+            progressBar.textContent = `${Math.round(progressPercent)}%`;
+            textSpan.textContent = `${annotatedCount} / ${imageNames.length}`;
+        }
+
+        function renderImageList() {
+            const listContainer = document.getElementById('image-list');
+            listContainer.innerHTML = '';
+            imageNames.forEach((name, idx) => {
+                const isAlreadyAnnotated = annotatedImages.includes(name);
+                const li = document.createElement('li');
+                li.textContent = name;
+                const statusSpan = document.createElement('span');
+                statusSpan.classList.add('status-tag');
+                if (isAlreadyAnnotated) {
+                    statusSpan.classList.add('status-annotated');
+                    statusSpan.textContent = '已标注';
+                } else {
+                    statusSpan.classList.add('status-unannotated');
+                    statusSpan.textContent = '未标注';
+                }
+                li.appendChild(statusSpan);
+                li.onclick = () => {
+                    currentPage = idx;
+                    updateImage();
+                    updateProgressBar();
+                };
+                listContainer.appendChild(li);
+            });
+        }
+
+        document.querySelectorAll('input[name="line"]').forEach((radio) => {
+            radio.addEventListener('change', (event) => {
+                if (radio.checked) {
+                    const selectedAnnotation = annotations.find(ann => ann.selected);
+                    if (selectedAnnotation) {
+                        selectedAnnotation.line = radio.value;
+                    }
+                }
+            });
+        });
+        
+        document.querySelectorAll('input[name="include_equation"]').forEach((radio) => {
+            radio.addEventListener('change', (event) => {
+                if (radio.checked) {
+                    const selectedAnnotation = annotations.find(ann => ann.selected);
+                    if (selectedAnnotation) {
+                        selectedAnnotation.include_equation = radio.value;
+                    }
+                }
+            });
+        });
+        
+        document.querySelectorAll('input[name="include_photo"]').forEach((radio) => {
+            radio.addEventListener('change', (event) => {
+                if (radio.checked) {
+                    const selectedAnnotation = annotations.find(ann => ann.selected);
+                    if (selectedAnnotation) {
+                        selectedAnnotation.include_photo = radio.value;
+                    }
+                }
+            });
+        });
+
+        function initAnnotatedImages() {
+            for (const imageName in imageData) {
+                if (imageData.hasOwnProperty(imageName)) {
+                    const imgData = imageData[imageName];
+                    if (imgData && imgData.table_info && Object.keys(imgData.table_info).length > 0) {
+                        annotatedImages.push(imageName);
+                        annotatedCount++;
+                    }
+                }
+            }
+        }
+
+        function returnToMainMenu() {
+            window.location.href = '/menu';
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = image.clientWidth;
+            canvas.height = image.clientHeight;
+            drawAnnotations();
+        });
+
+        // Ctrl+Enter to save
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter'){
+                event.preventDefault();
+                saveAnnotations();
+            }
+            else if (event.key === 'Enter') {
+                event.preventDefault();
+                console.log("Enter pressed");
+                selectNextUnlabeledBox(annotations);
+            }
+        });
+
+        window.onload = () => {
+            initAnnotatedImages();
+            updateImage();
+            updateProgressBar();
+            renderImageList();
+        };
+    </script>
+</body>
+</html>

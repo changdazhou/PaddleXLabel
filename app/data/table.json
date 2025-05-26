@@ -1,0 +1,398 @@
+{
+    "table_with_formula_431944.jpg": [
+        {
+            "block_bbox": [
+                250,
+                224,
+                632,
+                251
+            ],
+            "block_content": "5.1.5NL模型标定与结果分析",
+            "block_label": "paragraph_title",
+            "id": 0,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:14.662559"
+        },
+        {
+            "block_bbox": [
+                194,
+                303,
+                1042,
+                411
+            ],
+            "block_content": "使用Biogeme软件基于极大似然估计法对模型各变量的参数进行标定，并通过t值判断模型中各变量对出行选择行为影响是否显著，通过McFadden决定系数$\\rho^{2}$ 及调整后$\\rho^{2}$ 判断模型拟合效果，最终模型标定结果如表5-7所示：",
+            "block_label": "text",
+            "id": 1,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:14.662574"
+        },
+        {
+            "block_bbox": [
+                487,
+                430,
+                756,
+                451
+            ],
+            "block_content": "表5-7NL模型参数标定结果",
+            "block_label": "figure_title",
+            "id": 2,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:14.662579"
+        },
+        {
+            "block_bbox": [
+                395,
+                459,
+                848,
+                479
+            ],
+            "block_content": "Table 5-7 Calibration results of NL model parameters ",
+            "block_label": "figure_title",
+            "id": 3,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:14.662583"
+        },
+        {
+            "block_bbox": [
+                194,
+                493,
+                1040,
+                1462
+            ],
+            "block_content": "<html><body><table><tr><td>解释变量</td><td>参数估计值</td><td>t值</td></tr><tr><td>尺度系数</td><td></td><td></td></tr><tr><td rowspan=\"3\">$\\lambda_{ 公共交通 }$</td><td>3.39</td><td>5.99</td></tr><tr><td></td><td></td></tr><tr><td>$\\lambda_{ 小汽车 }$</td><td>1.15</td></tr><tr><td>$\\lambda_{ 慢行交通 }$</td><td>1.87</td><td>5.41</td></tr><tr><td>水平2固定哑元</td><td></td><td></td></tr><tr><td>公共交通巢固定哑元 $\\theta_{1}$</td><td>1.92</td><td>11.80</td></tr><tr><td>慢行交通巢固定哑元 $\\theta_{3}$</td><td>1.37</td><td>3.49</td></tr><tr><td>水平1固定哑元</td><td></td><td></td></tr><tr><td>地铁固定哑元 $\\beta_{(2|1)}$</td><td>0.349</td><td>5.39</td></tr><tr><td>出租车固定哑元 $\\beta_{(2|2)}$</td><td>-1.46</td><td>-11.12</td></tr><tr><td>步行固定哑元 $\\beta_{(2|3)}$</td><td>1.22</td><td>3.50</td></tr><tr><td>出行特性变量</td><td></td><td></td></tr><tr><td>出行时间（小时）</td><td>-3.03</td><td>-14.39</td></tr><tr><td>出行费用（元）</td><td>-0.0243</td><td>-6.68</td></tr><tr><td>出行距离 (km)</td><td>-0.0796</td><td>-10.72</td></tr><tr><td>自行车道宽度（m）</td><td>0.02</td><td>0.13</td></tr><tr><td>骑行环境哑元BTE1（部分改善）</td><td>0.581</td><td>5.22</td></tr><tr><td>骑行环境哑元BTE2（整体改善）</td><td>0.742</td><td>4.57</td></tr></table></body></html>",
+            "block_label": "table",
+            "id": 4,
+            "include_equation": "false",
+            "include_photo": "true",
+            "line": "full_line",
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:14.662588"
+        },
+        {
+            "block_bbox": [
+                613,
+                1580,
+                631,
+                1594
+            ],
+            "block_content": "63",
+            "block_label": "number",
+            "id": 5,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:14.662593"
+        }
+    ],
+    "table_with_formula_661836.jpg": [
+        {
+            "block_bbox": [
+                130,
+                173,
+                1045,
+                265
+            ],
+            "block_content": "式中，$S_{ 水 }$ 为节水率；$W_{ 节 t}$ 为改造后第t年节水技术产生的节水量，包含非传统水源利用和节水器具节水量；$W_{ 参 }$ 为参照建筑的基准用水量。\n",
+            "block_label": "text",
+            "id": 0,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183854"
+        },
+        {
+            "block_bbox": [
+                555,
+                303,
+                644,
+                370
+            ],
+            "block_content": "S_{能}=\\frac{E_{节t}}{E_{参}} ",
+            "block_label": "formula",
+            "id": 1,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183867"
+        },
+        {
+            "block_bbox": [
+                130,
+                401,
+                1058,
+                486
+            ],
+            "block_content": "式中，$S_{ 能 }$ 为节能率；$E_{ 节 t}$ 为改造后第t年节能技术产生的节能量；$E_{ 参 }$ 为参照建筑的基准用能量。\n",
+            "block_label": "text",
+            "id": 2,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183871"
+        },
+        {
+            "block_bbox": [
+                485,
+                505,
+                709,
+                525
+            ],
+            "block_content": "表5.1资源消耗评价指标",
+            "block_label": "figure_title",
+            "id": 3,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183876"
+        },
+        {
+            "block_bbox": [
+                131,
+                531,
+                1065,
+                634
+            ],
+            "block_content": "<html><body><table><tr><td>资源节约评价指标</td><td>评价参数</td></tr><tr><td>节能指标</td><td>节能率 $(S_{ 能 }/\\%)$</td></tr><tr><td>节水指标</td><td>节水率 $(S_{水}/\\%)$</td></tr></table></body></html>",
+            "block_label": "table",
+            "id": 4,
+            "include_equation": "true",
+            "include_photo": "false",
+            "line": "fewer_line",
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183880"
+        },
+        {
+            "block_bbox": [
+                131,
+                646,
+                384,
+                670
+            ],
+            "block_content": "5.1.2室内环境评价指标",
+            "block_label": "paragraph_title",
+            "id": 5,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183885"
+        },
+        {
+            "block_bbox": [
+                130,
+                695,
+                1072,
+                817
+            ],
+            "block_content": "建筑环境评价参数可分为室外环境评价参数与室内环境评价参数。室外环境评价参数包括室外声环境、光环境与风热环境等，此类环境在完成绿色改造后趋于稳定，通常不会发生较大幅度波动，因此本研究选取室内环境评价参数作为建筑运行阶段环境评价的指标。",
+            "block_label": "text",
+            "id": 6,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183889"
+        },
+        {
+            "block_bbox": [
+                131,
+                842,
+                1067,
+                964
+            ],
+            "block_content": "现有研究对室内环境进行评价时考虑的之中多分为声环境、光环境、热环境与空气品质，因此本研究选取等效A声压级、工作面照度、空气温度、相对湿度、CO2浓度、PM2.5浓度等具体评价参数对室内环境质量进行评价[83]，如表5.1所示。",
+            "block_label": "text",
+            "id": 7,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183894"
+        },
+        {
+            "block_bbox": [
+                485,
+                982,
+                711,
+                1002
+            ],
+            "block_content": "表5.2室内环境评价指标",
+            "block_label": "figure_title",
+            "id": 8,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183898"
+        },
+        {
+            "block_bbox": [
+                132,
+                1007,
+                1065,
+                1242
+            ],
+            "block_content": "<html><body><table><tr><td>室内环境评价指标</td><td>评价参数</td></tr><tr><td>室内声环境</td><td>等效A声压级(LA/dB)</td></tr><tr><td>室内光环境</td><td>工作面照度(I/lx)</td></tr><tr><td>室内热环境</td><td>空气温度(t/℃)</td></tr><tr><td></td><td>相对湿度(φ/%)</td></tr><tr><td>室内空气品质</td><td>CO2浓度(Cco2/ppm)</td></tr><tr><td></td><td>PM2.5浓度(CPM2.s/ppm)</td></tr></table></body></html>",
+            "block_label": "table",
+            "id": 9,
+            "include_equation": "true",
+            "include_photo": "false",
+            "line": "fewer_line",
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183902"
+        },
+        {
+            "block_bbox": [
+                131,
+                1259,
+                348,
+                1287
+            ],
+            "block_content": "5.2评价方法构建",
+            "block_label": "paragraph_title",
+            "id": 10,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183907"
+        },
+        {
+            "block_bbox": [
+                131,
+                1319,
+                384,
+                1343
+            ],
+            "block_content": "5.2.1指标评分区间划定",
+            "block_label": "paragraph_title",
+            "id": 11,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183911"
+        },
+        {
+            "block_bbox": [
+                130,
+                1368,
+                1065,
+                1490
+            ],
+            "block_content": "基于《绿色建筑评价标准》GB/T50378-2019、《既有建筑绿色改造评价标准》GB/T 51141-2015、《公共建筑节能设计标准》GB50189-2015等标准及相关研究对各项建筑绿色性能评价指标的评分准则进行确定，每项指标的评分区间为0~1，如表5.3所示。",
+            "block_label": "text",
+            "id": 12,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183916"
+        },
+        {
+            "block_bbox": [
+                994,
+                322,
+                1053,
+                345
+            ],
+            "block_content": "（5-2)",
+            "block_label": "formula_number",
+            "id": 13,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183920"
+        },
+        {
+            "block_bbox": [
+                1046,
+                1559,
+                1064,
+                1573
+            ],
+            "block_content": "55",
+            "block_label": "number",
+            "id": 14,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-25T13:56:16.183925"
+        }
+    ],
+    "table_with_formula_728857.jpg": [
+        {
+            "block_bbox": [
+                410,
+                151,
+                775,
+                171
+            ],
+            "block_content": "表5-6南宁市海绵型住区综合评价等级",
+            "block_label": "figure_title",
+            "id": 0,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-23T13:03:40.325377"
+        },
+        {
+            "block_bbox": [
+                164,
+                191,
+                1020,
+                213
+            ],
+            "block_content": "Table 5-6 Levels of comprehensive evaluation for residential districts with LID strategies in Nanning.",
+            "block_label": "figure_title",
+            "id": 1,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-23T13:03:40.325389"
+        },
+        {
+            "block_bbox": [
+                138,
+                223,
+                1050,
+                1109
+            ],
+            "block_content": "<html><body><table><tbody><tr><td>热环境等级</td><td>HIP日累计值(℃)</td><td>热岛效应</td></tr><tr><td>一级</td><td>$HIP_{总}<40$</td><td>很弱</td></tr><tr><td>二级</td><td>$40\\leq HIP_{总}<50$</td><td>较弱</td></tr><tr><td>三级</td><td>$50\\leq HIP_{总}<70$</td><td>弱</td></tr><tr><td>四级</td><td>$70\\leq HIP_{总}<80$</td><td>强</td></tr><tr><td>五级</td><td>$80\\leq HIP_{总}<120$</td><td>较强</td></tr><tr><td>六级</td><td>$120\\leq HIP_{总}$</td><td>非常强</td></tr><tr><td>雨水消纳等级</td><td>年径流总量控制率(%)</td><td>雨水消纳能力</td></tr><tr><td>一级</td><td>$95<A R_{总}$</td><td>超强</td></tr><tr><td>二级</td><td>$90<AR_{总}\\leq95$</td><td>非常强</td></tr><tr><td>三级</td><td>$85<AR_{总}\\leq90$</td><td>很强</td></tr><tr><td>四级</td><td>$80<AR_{总}\\leq85$</td><td>较强</td></tr><tr><td>五级</td><td>$75<AR_{总}\\leq80$</td><td>稍强</td></tr><tr><td>六级</td><td>$70\\leq AR_{总}\\leq75$</td><td>强</td></tr></tbody></table></body></html>",
+            "block_label": "table",
+            "id": 2,
+            "include_equation": "true",
+            "include_photo": "false",
+            "line": "fewer_line",
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-23T13:03:40.325394"
+        },
+        {
+            "block_bbox": [
+                136,
+                1171,
+                1048,
+                1391
+            ],
+            "block_content": "当对某个具体项目的海绵型住区方案进行综合评价时，首先根据式(5-1)和式(5-2)计算出该方案的年径流总量控制率和HIP日累计值；其次基于表5-6将计算结果进行对照，确定该方案的热环境等级和雨水消纳等级，定性判断该设计方案的优劣。若需对该方案进行进一步的优化设计，则根据上文获取的不同下垫面热效应值（图4-10）和年径流总量控制率（表5-1）进行下垫面类型及面积占比调整，达到综合改善的目的。",
+            "block_label": "text",
+            "id": 3,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-23T13:03:40.325412"
+        },
+        {
+            "block_bbox": [
+                137,
+                1415,
+                1049,
+                1488
+            ],
+            "block_content": "综上，本研究所提出的综合评价方法不仅可以快速预测方案设计阶段海绵型住区方",
+            "block_label": "text",
+            "id": 4,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-23T13:03:40.325418"
+        },
+        {
+            "block_bbox": [
+                602,
+                1538,
+                620,
+                1552
+            ],
+            "block_content": "93",
+            "block_label": "number",
+            "id": 5,
+            "is_concatenated": false,
+            "label_user": "11",
+            "label_time": "2025-05-23T13:03:40.325422"
+        }
+    ]
+}

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Annotation Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 全局样式 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f9fafb 100%);
+            color: #1e293b;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* 进度条区域 */
+        .progress-wrapper {
+            padding: 28px 36px 20px 36px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #progress-bar-container {
+            flex: 1;
+            background: rgba(238, 242, 255, 0.8);
+            backdrop-filter: blur(8px);
+            height: 32px;
+            border-radius: 20px;
+            box-shadow: 
+                0 2px 10px rgba(79,70,229,0.08),
+                inset 0 1px 2px rgba(255,255,255,0.9);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        #progress-bar {
+            background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
+            height: 100%;
+            border-radius: 20px;
+            box-shadow: 
+                0 2px 12px rgba(99,102,241,0.3),
+                inset 0 -2px 4px rgba(0,0,0,0.1);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        #progress-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #4f46e5;
+            min-width: 80px;
+            text-align: right;
+            letter-spacing: 0.5px;
+        }
+
+        /* 主容器 */
+        #container {
+            display: flex;
+            gap: 32px;
+            padding: 0 36px 36px 36px;
+            height: calc(100vh - 180px);
+            min-height: 600px;
+        }
+
+        /* 图片区域 */
+        #image-area {
+            flex: 1 1 60%;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(224,231,255,0.8);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 
+                0 8px 30px rgba(79,70,229,0.12),
+                0 2px 6px rgba(79,70,229,0.04);
+            transition: transform 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 300px;
+            max-width: 60vw;
+        }
+
+        #image-area:hover {
+            transform: translateY(-2px);
+        }
+
+        #image-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            max-height: 90vh;
+        }
+
+        #current-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(59,130,246,0.1);
+        }
+
+        #annotation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            pointer-events: auto;
+        }
+
+        /* 控制区域 */
+        #controls {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 340px;
+            max-width: 40%;
+        }
+
+        #controls > h2 {
+            font-size: 1.3rem;
+            color: #4f46e5;
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 14px;
+        }
+
+        /* 按钮样式 */
+        .control-button {
+            background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 
+                0 4px 12px rgba(99,102,241,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.1);
+            flex: 1;
+            margin: 0;
+            outline: none;
+        }
+
+
+        .control-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 6px 20px rgba(99,102,241,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.2);
+        }
+
+        .control-button:active {
+            transform: translateY(1px);
+            background: linear-gradient(95deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        .control-button:disabled {
+            background: #c7d2fe;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        /* 下拉选择框 */
+        select.control-button {
+            background: #f4f6ff;
+            color: #4f46e5;
+            border: 2px solid #6366f1;
+            padding: 12px 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+
+        .single-button {
+            background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 
+                0 4px 12px rgba(99,102,241,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.1);
+            margin: 0;
+            outline: none;
+            padding: 14px 0;  /* 与其他按钮保持一致 */
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 8px;
+        }        
+
+        /* 复选框容器 */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: #f0f7ff;
+            border: 2px solid #4f46e5;
+            cursor: pointer;
+            min-width: 140px;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover {
+            background: #e0edff;
+            transform: translateY(-1px);
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            accent-color: #4f46e5;
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-weight: 600;
+            color: #4f46e5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* 图片列表区域 */
+        #image-list-window {
+            margin-top: 8px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 14px;
+            box-shadow: 
+                0 8px 30px rgba(79,70,229,0.15),
+                0 2px 8px rgba(79,70,229,0.06);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #image-list-header {
+            background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 14px 14px 0 0;
+            letter-spacing: 0.5px;
+            font-size: 1.1rem;
+        }
+
+        #image-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #c7d2fe transparent;
+        }
+
+        #image-list li {
+            padding: 12px 24px;
+            border-bottom: 1px solid rgba(243,244,246,0.8);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.02rem;
+            transition: all 0.2s ease;
+        }
+
+        #image-list li:hover {
+            background: rgba(238,242,255,0.8);
+            transform: translateX(4px);
+            color: #4f46e5;
+        }
+
+        /* 状态标签 */
+        .status-tag {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .status-annotated {
+            background: linear-gradient(95deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+        }
+
+        .status-unannotated {
+            background: linear-gradient(95deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+        }
+
+        /* 滚动条样式 */
+        #image-list::-webkit-scrollbar,
+        #controls::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #image-list::-webkit-scrollbar-thumb,
+        #controls::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 4px;
+        }
+
+        #image-list::-webkit-scrollbar-track,
+        #controls::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            #container {
+                padding: 0 24px 24px 24px;
+                gap: 24px;
+            }
+            
+            .progress-wrapper {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            #container {
+                flex-direction: column;
+                padding: 16px;
+                gap: 20px;
+            }
+
+            #controls,
+            #image-area {
+                min-width: 0;
+                max-width: none;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .progress-wrapper {
+                padding: 16px 12px;
+            }
+            
+            #container {
+                padding: 12px;
+            }
+            
+            .control-button {
+                font-size: 1rem;
+                padding: 12px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-wrapper">
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <span id="progress-text"></span>
+    </div>
+    
+    <div id="container">
+        <div id="image-area">
+            <div id="image-container">
+                <img id="current-image" src="{{ url_for('static', filename='images/' ~ image_names[0]) }}" alt="标注图片" />
+                <canvas id="annotation-canvas"></canvas>
+            </div>
+        </div>
+        
+        <div id="controls">
+            <h2>标注操作区</h2>
+            <div class="control-row">
+                <select id="order-id-select" class="control-button" onchange="updateOrderIds()">
+                    <option value="" disabled selected>选择框序号</option>
+                </select>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="connect-section" />
+                    <label for="connect-section">连接前段</label>
+                </div>
+            </div>
+            
+            <div class="control-row">
+                <button class="control-button" onclick="previousPage()">上一页</button>
+                <button class="control-button" onclick="nextPage()">下一页</button>
+            </div>
+            
+            <button class="single-button" onclick="saveAnnotations()">提交标注</button>
+            <button class="single-button" onclick="returnToMainMenu()">返回主菜单</button>
+            
+            <div id="image-list-window">
+                <div id="image-list-header">图片列表</div>
+                <ul id="image-list"></ul>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const caseTypes = {{ case_types|tojson }};
+        const imageData = {{ image_data|tojson }};
+        const imageNames = {{ image_names|tojson }};
+        let currentPage = 0;
+        let annotatedCount = 0; // 已标注的数量
+        let selectedBlock = null;
+        const canvas = document.getElementById('annotation-canvas');
+        const ctx = canvas.getContext('2d');
+        const image = document.getElementById('current-image');
+        const orderIdSelect = document.getElementById('order-id-select');
+        const checkbox = document.getElementById('connect-section');
+        let annotations = [];  // 保存当前图像的所有标注信息
+        let annotatedImages = [];
+
+        function updateImage() {
+            image.src = "{{ url_for('static', filename='images/') }}" + imageNames[currentPage];
+            image.onload = () => {
+                canvas.width = image.clientWidth;
+                canvas.height = image.clientHeight;
+                loadAnnotations(imageNames[currentPage]);
+            };
+        }
+
+        function loadAnnotations(imageName) {
+            fetch(`/get_annotation?image_name=${encodeURIComponent(imageName)}&anno_type=order_info`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    annotations = data.parsing_res_list || [];
+                    // 初始化选中状态
+                    annotations.forEach(ann => {
+                        ann.selected = false;
+                        if (typeof ann.is_concatenated === 'undefined') {
+                            ann.is_concatenated = false;
+                        }
+                    });        
+                    selectedBlock = null;
+                    console.log(annotations);
+                    drawAnnotations();
+                    initializeOrderIdSelect();
+                    checkbox.checked = false;
+                })
+                .catch(error => console.error('Error fetching JSON:', error));
+        }
+
+        function drawAnnotations() {
+            const scaleX = image.clientWidth / image.naturalWidth;
+            const scaleY = image.clientHeight / image.naturalHeight;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            annotations.forEach(annotation => {
+                const [x1, y1, x2, y2] = annotation.block_bbox;
+                const selected = annotation.selected;
+                const scaledX1 = x1 * scaleX;
+                const scaledY1 = y1 * scaleY;
+                const scaledX2 = x2 * scaleX;
+                const scaledY2 = y2 * scaleY;
+                const orderId = annotation.order_id + 1;
+
+                ctx.lineWidth = selected ? 3 : 2;
+                ctx.strokeStyle = selected ? '#ef4444' : '#3b82f6';
+                ctx.fillStyle = selected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)';
+                ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+                ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+
+                // 绘制编号文字
+                ctx.fillStyle = selected ? '#b91c1c' : '#2563eb';
+                ctx.font = 'bold 24px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.textAlign = 'left';
+                const textWidth = ctx.measureText(orderId).width;
+                let textX = scaledX2 + 6;
+                const textY = scaledY1;
+                if (textX + textWidth > canvas.width) {
+                    textX = scaledX2 - textWidth - 6;
+                }
+                ctx.fillText(orderId, textX, textY);
+            });
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            let clickedIndex = null;
+            console.log(annotations)
+
+            annotations.forEach((annotation, index) => {
+                const [x1, y1, x2, y2] = annotation.block_bbox.map((v, i) => {
+                    // 缩放坐标
+                    return i % 2 === 0 ? v * (canvas.width / image.naturalWidth) : v * (canvas.height / image.naturalHeight);
+                });
+                if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+                    clickedIndex = index;
+                }
+            });
+
+            if (clickedIndex !== null) {
+                annotations.forEach(ann => ann.selected = false);
+                annotations[clickedIndex].selected = true;
+                selectedBlock = clickedIndex;
+                orderIdSelect.value = annotations[clickedIndex].order_id;
+                console.log(orderIdSelect.value)
+                checkbox.checked = !!annotations[clickedIndex].is_concatenated;
+                drawAnnotations();
+            }
+        });
+
+        checkbox.addEventListener('change', function() {
+            const selectedAnnotation = annotations.find(ann => ann.selected);
+            if (selectedAnnotation) {
+                selectedAnnotation.is_concatenated = checkbox.checked;
+            }
+        });
+
+
+        checkbox.addEventListener('change', function() {
+            const selectedAnnotation = annotations.find(ann => ann.selected);
+            if (!selectedAnnotation) return;
+        
+            const currentOrderId = selectedAnnotation.order_id;
+        
+            if (currentOrderId === newOrderId) return;
+            if (newOrderId < 0 || newOrderId >= annotations.length) {
+                console.error("无效的order_id");
+                return;
+            }
+        
+            // 只调整 order_id 字段，不改变 annotations 数组顺序
+            moveAnnotationOrderId(annotations, currentOrderId, newOrderId);
+        
+            drawAnnotations();
+        });
+
+        function moveAnnotationOrderId(annotations, currentOrderId, newOrderId) {
+            if (!Array.isArray(annotations)) return;
+            if (currentOrderId === newOrderId) return;
+        
+            // 按 order_id 升序复制
+            const ordered = [...annotations].sort((a, b) => a.order_id - b.order_id);
+        
+            // 找到要移动的元素
+            const selectedIndex = ordered.findIndex(ann => ann.order_id === currentOrderId);
+            if (selectedIndex === -1) return;
+        
+            // 移动元素
+            const [selectedBlock] = ordered.splice(selectedIndex, 1);
+            const targetIndex = Math.max(0, Math.min(newOrderId, ordered.length));
+            ordered.splice(targetIndex, 0, selectedBlock);
+        
+            // 重新分配 order_id
+            ordered.forEach((ann, idx) => {
+                ann.order_id = idx;
+            });
+        
+            // 写回原数组
+            ordered.forEach(orderedAnn => {
+                const ann = annotations.find(a => a.id === orderedAnn.id);
+                if (ann) ann.order_id = orderedAnn.order_id;
+            });
+        }
+        
+
+        function updateOrderIds() {
+            const newOrderId = parseInt(orderIdSelect.value, 10);
+            const selectedAnnotation = annotations.find(ann => ann.selected);
+
+            if (!selectedAnnotation) return;
+
+            const currentOrderId = selectedAnnotation.order_id;
+            if (currentOrderId === newOrderId) return;
+            if (newOrderId < 0 || newOrderId >= annotations.length) {
+                console.error("无效的order_id");
+                return;
+            }
+
+            moveAnnotationOrderId(annotations, currentOrderId, newOrderId);
+            drawAnnotations();
+        }
+
+        function initializeOrderIdSelect() {
+            orderIdSelect.innerHTML = '';
+            annotations.forEach((annotation, index) => {
+                const option = document.createElement('option');
+                option.value = annotation.order_id;
+                option.textContent = `Box ${annotation.order_id + 1}`;
+                orderIdSelect.appendChild(option);
+            });
+            if (selectedBlock !== null) {
+                orderIdSelect.value = annotations[selectedBlock].order_id;
+            }
+        }
+
+        function saveAnnotations() {
+            const currentImageName = imageNames[currentPage];  // 当前图片名
+        
+            // 判断是否已标注过
+            const isAlreadyAnnotated = annotatedImages.includes(currentImageName);
+        
+            fetch('/save?anno_type=order_info', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    imageName: currentImageName,
+                    annotations: annotations
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!isAlreadyAnnotated) {
+                    annotatedImages.push(currentImageName);  // 加入已标注列表
+                    annotatedCount++;                        // 计数+1
+                }
+                renderImageList();
+                updateProgressBar();
+                nextPage();
+            })
+            .catch(error => {
+                alert('保存失败，请重试。');
+                console.error('Error:', error);
+            });
+        }
+
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateImage();
+                renderImageList();
+                updateProgressBar();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < imageNames.length - 1) {
+                currentPage++;
+                
+                updateImage();
+                renderImageList();
+                updateProgressBar();
+            }
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progress-bar');
+            const textSpan = document.getElementById('progress-text');
+            const progressPercent = (annotatedCount / imageNames.length) * 100;
+        
+            progressBar.style.width = `${progressPercent}%`;
+            progressBar.textContent = `${Math.round(progressPercent)}%`;  // 只显示百分比
+            textSpan.textContent = `${annotatedCount} / ${imageNames.length}`; // 右侧显示x/x
+        }
+
+        function jumpToImage(select) {
+            const index = parseInt(select.value, 10);
+            if (!isNaN(index) && index >= 0 && index < imageNames.length) {
+                currentPage = index;
+                updateImage();
+            }
+        }
+
+        function renderImageList() {
+            const listContainer = document.getElementById('image-list');
+            listContainer.innerHTML = ''; // 清空
+        
+            imageNames.forEach((name, idx) => {
+                // 判断是否已标注：判断 imageData 中对应图片的 order_info 是否为空对象
+                const isAlreadyAnnotated = annotatedImages.includes(name);
+                
+                const li = document.createElement('li');
+                li.textContent = name;
+        
+                const statusSpan = document.createElement('span');
+                statusSpan.classList.add('status-tag');
+                if (isAlreadyAnnotated) {
+                    statusSpan.classList.add('status-annotated');
+                    statusSpan.textContent = '已标注';
+                } else {
+                    statusSpan.classList.add('status-unannotated');
+                    statusSpan.textContent = '未标注';
+                }
+        
+                li.appendChild(statusSpan);
+        
+                li.onclick = () => {
+                    currentPage = idx;
+                    updateImage();
+                    updateProgressBar();
+                    updateOrderIds();
+                };
+        
+                listContainer.appendChild(li);
+            });
+        }
+
+        function initAnnotatedImages() {
+            for (const imageName in imageData) {
+              if (imageData.hasOwnProperty(imageName)) {
+                const imgData = imageData[imageName];
+                if (imgData && imgData.order_info && Object.keys(imgData.order_info).length > 0) {
+                  annotatedImages.push(imageName);
+                  annotatedCount++;
+                  console.log(`已标注图片: ${annotatedCount}`);
+                }
+              }
+            }
+          }
+        
+
+        function returnToMainMenu() {
+            window.location.href = '/menu'; // 修改为你的主菜单地址
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = image.clientWidth;
+            canvas.height = image.clientHeight;
+            drawAnnotations();
+        });
+
+        // 监听键盘按下事件
+        document.addEventListener('keydown', function(event) {
+            // 判断是否按下 Ctrl + Enter
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                event.preventDefault();  // 阻止默认行为（比如换行）
+                saveAnnotations();       // 调用提交函数
+            }
+        });
+
+        // 初始化加载
+        window.onload = () => {
+            initAnnotatedImages();
+            updateImage();
+            updateProgressBar();
+            renderImageList();
+        };
+    </script>
+</body>
+</html>

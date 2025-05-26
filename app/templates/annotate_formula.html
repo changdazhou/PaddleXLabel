@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8" />
+    <title>Annotation Interface</title>
+    <style>
+        html,body {height:100%;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #f0f4ff 0%, #f9fafb 100%);
+            color: #22223b;
+            min-height: 100vh;
+        }
+        /* 进度条 */
+        #progress-bar-container {
+            background: #eef2ff;
+            height: 28px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.07);
+            margin: 24px 32px 16px 32px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        #progress-bar {
+            background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+            height: 100%;
+            color: #fff;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: width 0.5s cubic-bezier(.33,1.39,.93,1);
+            border-radius: 16px;
+            box-shadow: 0 0 10px rgba(59,130,246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #progress-text {
+            margin-left: 14px;
+            margin-right: 14px;
+            min-width: 60px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #4f46e5;
+            letter-spacing: 1px;
+        }
+        /* 主容器 */
+        #container {
+            display: flex;
+            gap: 28px;
+            padding: 16px 32px 32px 32px;
+            height: calc(100vh - 150px);
+            min-height: 600px;
+            align-items: stretch;
+        }
+        /* 图片区域 */
+        #image-area {
+            flex: 1 1 60%;
+            background: #fff;
+            border: 1.5px solid #e0e7ff;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 6px 24px rgba(79,70,229,0.10);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 300px;
+            min-height: 350px;
+            max-width: 60vw;
+            max-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        #image-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            max-height: 80vh;
+            box-sizing: border-box;
+        }
+        
+        #current-image {
+            display: block;
+            max-width: 100%;
+            max-height: 80vh;
+            width: auto;     /* 这里改成auto，宽高由max宽高限制控制 */
+            height: auto;    /* 这样图片长边会撑满max宽高限制 */
+            border-radius: 9px;
+            box-shadow: 0 1px 8px rgba(59,130,246,0.08);
+        }
+        
+        /* 画布大小跟图片完全一致 */
+        #annotation-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            border-radius: 9px;
+            pointer-events: auto;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+        }
+        /* 控制区整体 */
+        #controls {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 330px;
+            max-width: 40%;
+            height: 100%;
+        }
+        /* 控制区块 */
+        .control-block {
+            background: linear-gradient(90deg,rgb(230, 230, 230) 60%,#f2f0f0 100%);
+            border-radius: 14px;
+            box-shadow: 0 6px 22px rgba(79,70,229,0.13);
+            padding: 6px 2px 0px 2px;
+            color: #fff;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+        .control-block-title {
+            font-size: 0.97rem;
+            font-weight: 600;
+            margin-bottom: 1px;
+            color: #4f46e5;
+            letter-spacing: 1px;
+        }
+        .latex-preview {
+            background: #fff;
+            color: #4f46e5;
+            border-radius: 7px;
+            min-height: 80px;
+            padding: 7px 0;
+            text-align: center;
+            font-size: 1.28rem;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.07);
+            word-break: break-all;
+        }
+        textarea.formula-edit {
+            width: 100%;
+            min-height: 80px;
+            border-radius: 7px;
+            border: 1.5px solid #8b5cf6;
+            font-size: 1.14rem;
+            padding: 7px;
+            color: #222;
+            box-sizing: border-box;
+        }
+        .row-btns {
+            display: flex;
+            width: 100%;
+            gap: 12px;
+        }
+        .control-button {
+            background: linear-gradient(90deg,#6366f1 60%,#8b5cf6 100%);
+            color: #fff;
+            border: none;
+            padding: 13px 0;
+            font-size: 1.08rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.22s, box-shadow 0.22s;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.12);
+            flex: 1;
+            margin: 0 1px;
+            outline: none;
+        }
+        .control-button:hover {
+            background: linear-gradient(90deg,#4f46e5 70%,#6366f1 100%);
+            box-shadow: 0 4px 16px rgba(67,56,202,0.25);
+        }
+        .control-button:active {
+            background: #4f46e5;
+        }
+        .control-button:disabled {
+            background: #c7d2fe;
+            color: #fff;
+            cursor: not-allowed;
+        }
+        select.control-button {
+            background: #f4f6ff;
+            color: #4f46e5;
+            border: 1.5px solid #6366f1;
+            padding-left: 12px;
+            font-size: 1.08rem;
+            font-weight: 600;
+            flex: 2;
+        }
+        .single-button {
+            padding: 10px 0;
+            font-size: 1.08rem;
+            width: 100%;
+            margin-top: 7px;
+            flex: none;
+        }
+        /* 图片列表区 */
+        #image-list-window {
+            margin-top: 6px;
+            background: #fff;
+            border-radius: 11px;
+            box-shadow: 0 6px 22px rgba(79,70,229,0.11);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        #image-list-header {
+            background: linear-gradient(90deg,#6366f1 60%,#8b5cf6 100%);
+            color: #fff;
+            font-weight: 700;
+            padding: 12px 20px;
+            border-radius: 11px 11px 0 0;
+            letter-spacing: 1px;
+            font-size: 1.08rem;
+        }
+        #image-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+        }
+        #image-list li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.02rem;
+            transition: background 0.16s;
+        }
+        #image-list li:hover {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+        .status-tag {
+            font-size: 0.92rem;
+            font-weight: 600;
+            padding: 3px 11px;
+            border-radius: 14px;
+            margin-left: 7px;
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+        .status-annotated {
+            background: #22c55e;
+            color: #fff;
+        }
+        .status-unannotated {
+            background: #ef4444;
+            color: #fff;
+        }
+        /* 滚动条 */
+        #image-list::-webkit-scrollbar, #controls::-webkit-scrollbar {
+            width: 8px;
+        }
+        #image-list::-webkit-scrollbar-thumb, #controls::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 4px;
+        }
+        /* 公式类型横向布局 */
+        .formula-type-section {
+            display: flex; /* 改为横向布局 */
+            flex-direction: row; /* 横向排布 */
+            justify-content: space-between; /* 分散对齐 */
+            gap: 12px; /* 按钮间距 */
+            margin-bottom: 12px;
+        }
+        /* 复选框美化（保留，但改为单选按钮用样式） */
+        .radio-container {
+            display: flex;
+            align-items: center;
+            padding: 6px 14px 6px 8px;
+            border-radius: 7px;
+            background: #f0f7ff;
+            border: 1.5px solid #4f46e5;
+            cursor: pointer;
+            min-width: 140px;
+            font-size: 1rem; /* 增大字体 */
+            color: #1e40af; /* 深蓝色字体 */
+            user-select: none;
+            justify-content: centerspace-between; /* 居中分散对齐内容 */
+        }
+        .radio-container input[type="radio"] {
+            accent-color: #4f46e5;
+            width: 21px;
+            height: 21px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        .radio-container label {
+            font-weight: 600;
+            color: #4f46e5;
+            cursor: pointer;
+        }
+        /* 响应式 */
+        @media (max-width: 900px) {
+            #container {
+                flex-direction: column;
+                padding: 16px;
+                gap: 18px;
+            }
+            #controls, #image-area {
+                min-width: 0;
+                max-width: none;
+                width: 100%;
+                margin: 0;
+                box-sizing: border-box;
+            }
+            #controls {
+                padding: 20px 10px;
+            }
+        }
+        @media (max-width: 600px) {
+            #progress-bar-container { margin: 12px 3vw; }
+            #container { padding: 12px 2vw; }
+        }
+    </style>
+    <!-- KaTeX 依赖 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+        integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+</head>
+<body>
+    <!-- 顶部进度条 -->
+    <div style="display: flex; align-items: center;">
+        <div id="progress-bar-container" style="flex:1;">
+            <div id="progress-bar"></div>
+        </div>
+        <span id="progress-text"></span>
+    </div>
+    <div id="container">
+        <!-- 左侧图片区 -->
+        <div id="image-area">
+            <div id="image-container">
+                <img id="current-image" src="{{ url_for('static', filename='images/' ~ image_names[0]) }}" alt="图片" />
+                <canvas id="annotation-canvas"></canvas>
+            </div>
+        </div>
+        <!-- 右侧控制区 -->
+        <div id="controls">
+            <!-- 公式类型提示 -->
+            <div class="control-block">
+                <div class="control-block-title">公式渲染预览</div>
+                <div id="latex-preview" class="latex-preview">(公式预览区)</div>
+            </div>
+            <div class="control-block">
+                <div class="control-block-title">公式修改文本框</div>
+                <textarea id="formula-edit" class="formula-edit" placeholder="输入LaTeX公式"></textarea>
+            </div>
+            <div class="control-block">
+                <div class="control-block-title">公式类型（formula type）</div>
+                <div class="formula-type-section" id="formula-type-section"></div>
+            </div>
+            <div class="control-block combo">
+                <!-- 旧的按钮组改为单选按钮 -->
+                <div class="row-btns">
+                    <button class="control-button" onclick="previousPage()">上一页</button>
+                    <button class="control-button" onclick="nextPage()">下一页</button>
+                </div>
+            </div>
+            <!-- 保存/返回 -->
+            <button class="control-button single-button" onclick="saveAnnotations()">保存结果</button>
+            <button class="control-button single-button" onclick="returnToMainMenu()">返回主菜单</button>
+            <!-- 图片列表 -->
+            <div id="image-list-window">
+                <div id="image-list-header">图片列表</div>
+                <ul id="image-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 保持原接口变量和逻辑
+        const caseTypes = {{ case_types|tojson }};
+        const imageData = {{ image_data|tojson }};
+        const imageNames = {{ image_names|tojson }};
+        let currentPage = 0;
+        let annotatedCount = 0; // 已标注的数量
+        let selectedBlock = null;
+        const canvas = document.getElementById('annotation-canvas');
+        const ctx = canvas.getContext('2d');
+        const image = document.getElementById('current-image');
+        let annotations = [];  // 当前图像的所有标注信息
+        let annotatedImages = [];
+
+        // 新增公式相关元素
+        const latexPreview = document.getElementById('latex-preview');
+        const formulaEdit = document.getElementById('formula-edit');
+
+        // 公式类型单选按钮区域
+        const formulaTypeSection = document.getElementById('formula-type-section');
+
+        // 定义公式类型选项
+        const formulaTypes = [
+            { value: 'handwriting', label: '手写 (handwriting)' },
+            { value: 'print', label: '印刷 (print)' },
+            { value: 'include_chinese', label: '含中文 (include_chinese)' }
+        ];
+
+        // 动态生成单选按钮
+        function createFormulaTypeRadios() {
+            formulaTypes.forEach((type, index) => {
+                const label = document.createElement('label');
+                label.className = 'radio-container';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'formulaType';
+                input.value = type.value;
+                if (index === 0) input.checked = false; // 默认不选
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(type.label));
+                formulaTypeSection.appendChild(label);
+
+                // 添加事件监听
+                input.addEventListener('change', () => {
+                    // 选中后自动赋值
+                    if (input.checked) {
+                        // 赋值到当前选中的annotation
+                        const selectedAnnotation = annotations.find(ann => ann.selected);
+                        if (selectedAnnotation) {
+                            selectedAnnotation.formula_type = input.value;
+                        }
+                    }
+                });
+            });
+        }
+
+        createFormulaTypeRadios();
+
+        function updateImage() {
+            image.src = "{{ url_for('static', filename='images/') }}" + imageNames[currentPage];
+            image.onload = () => {
+                canvas.width = image.clientWidth;
+                canvas.height = image.clientHeight;
+                loadAnnotations(imageNames[currentPage]);
+            };
+        }
+
+        function loadAnnotations(imageName) {
+            fetch(`/get_annotation?image_name=${encodeURIComponent(imageName)}&anno_type=formula_info`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    annotations = data.parsing_res_list || [];
+                    annotations.forEach(ann => {
+                        ann.selected = false;
+                        if (typeof ann.is_concatenated === 'undefined') {
+                            ann.is_concatenated = false;
+                        }
+                    });        
+                    selectedBlock = null;
+                    drawAnnotations();
+                    // 右侧表单清空
+                    formulaEdit.value = "";
+                    latexPreview.textContent = "";
+                    // 清空单选按钮的选中状态
+                    document.querySelectorAll('input[name="formulaType"]').forEach(radio => radio.checked = false);
+                })
+                .catch(error => console.error('Error fetching JSON:', error));
+        }
+
+        function drawAnnotations() {
+            const scaleX = image.clientWidth / image.naturalWidth;
+            const scaleY = image.clientHeight / image.naturalHeight;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            annotations.forEach(annotation => {
+                const [x1, y1, x2, y2] = annotation.block_bbox;
+                const block_label = annotation.block_label;
+                const selected = annotation.selected;
+                const scaledX1 = x1 * scaleX;
+                const scaledY1 = y1 * scaleY;
+                const scaledX2 = x2 * scaleX;
+                const scaledY2 = y2 * scaleY;
+                const Id = annotation.id + 1;
+            
+                if (block_label === 'formula') {
+                    const hasFormulaType = annotation.formula_type && annotation.formula_type.trim() !== "";
+                    ctx.lineWidth = selected ? 3 : 2;
+                    ctx.strokeStyle = hasFormulaType ? '#22c55e' : (selected ? '#ef4444' : '#3b82f6');
+                    ctx.fillStyle = hasFormulaType ? 'rgba(34, 197, 94, 0.15)' : (selected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)');
+                    ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+                    ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+            
+                    ctx.fillStyle = hasFormulaType ? '#16a34a' : (selected ? '#b91c1c' : '#2563eb');
+                } else {
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#999999';
+                    ctx.fillStyle = 'rgba(153, 153, 153, 0.15)';
+                    ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+                    ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
+            
+                    ctx.fillStyle = '#999999';
+                }
+                ctx.font = 'bold 24px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.textAlign = 'left';
+                const textWidth = ctx.measureText(Id).width;
+                let textX = scaledX2 + 6;
+                const textY = scaledY1;
+                if (textX + textWidth > canvas.width) {
+                    textX = scaledX2 - textWidth - 6;
+                }
+                ctx.fillText(Id, textX, textY);
+            });
+        }
+        
+        function selectNextUnlabeledBox(annotations) {
+            const nextIndex = annotations.findIndex(annotation => 
+                annotation.block_label === 'formula' && 
+                (!annotation.formula_type || annotation.formula_type.trim() === "")
+            );
+        
+            if (nextIndex !== -1) {
+                // 清除当前选中状态
+                annotations.forEach(annotation => annotation.selected = false);
+        
+                // 选中下一个未标注的框
+                annotations[nextIndex].selected = true;
+                const ann = annotations[nextIndex];
+                const block_label = ann.block_label;
+                if (block_label === 'formula') {
+                    console.log(ann);
+                    formulaEdit.value = ann.block_content || "";
+                    let latex = ann.block_content ? ann.block_content.trim() : "";
+                    if (/^\$/.test(latex) && /\$$/.test(latex)) {
+                        latex = latex.replace(/^\$+|\$+$/g, '');
+                    }
+                    try {
+                        katex.render(latex, latexPreview, {
+                            throwOnError: false,
+                            displayMode: true
+                        });
+                    } catch (e) {
+                        latexPreview.textContent = ann.content || "";
+                    }
+                    // 设置对应的单选按钮（若有匹配）
+                    document.querySelectorAll('input[name="formulaType"]').forEach(radio => {
+                        radio.checked = (radio.value === ann.formula_type);
+                    });
+                }
+                drawAnnotations();
+            } else {
+                saveAnnotations();
+            }
+        }        
+
+        // 点击annotation-canvas，选中框，右侧自动显示公式信息
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            let clickedIndex = null;
+
+            annotations.forEach((annotation, index) => {
+                const [x1, y1, x2, y2] = annotation.block_bbox.map((v, i) => {
+                    return i % 2 === 0 ? v * (canvas.width / image.naturalWidth) : v * (canvas.height / image.naturalHeight);
+                });
+                if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+                    clickedIndex = index;
+                }
+            });
+
+            if (clickedIndex !== null) {
+                annotations.forEach(ann => ann.selected = false);
+                annotations[clickedIndex].selected = true;
+                selectedBlock = clickedIndex;
+                const ann = annotations[clickedIndex];
+                const block_label = ann.block_label;
+                if (block_label === 'formula') {
+                    console.log(ann);
+                    formulaEdit.value = ann.block_content || "";
+                    let latex = ann.block_content ? ann.block_content.trim() : "";
+                    if (/^\$/.test(latex) && /\$$/.test(latex)) {
+                        latex = latex.replace(/^\$+|\$+$/g, '');
+                    }
+                    try {
+                        katex.render(latex, latexPreview, {
+                            throwOnError: false,
+                            displayMode: true
+                        });
+                    } catch (e) {
+                        latexPreview.textContent = ann.content || "";
+                    }
+                    // 设置对应的单选按钮（若有匹配）
+                    document.querySelectorAll('input[name="formulaType"]').forEach(radio => {
+                        radio.checked = (radio.value === ann.formula_type);
+                    });
+                }
+                drawAnnotations();
+            }
+        });
+
+        // 编辑latex时同步预览和数据
+        formulaEdit.addEventListener('input', function() {
+            let latex = this.value.trim();
+            if (/^\$/.test(latex) && /\$$/.test(latex)) {
+                latex = latex.replace(/^\$+|\$+$/g, '');
+            }
+            try {
+                katex.render(latex, latexPreview, {
+                    throwOnError: false,
+                    displayMode: true
+                });
+            } catch (e) {
+                latexPreview.textContent = this.value;
+            }
+        });
+
+        // 单选按钮同步变化，赋值给annotation
+        document.querySelectorAll('input[name="formulaType"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    const selectedAnnotation = annotations.find(ann => ann.selected);
+                    if (selectedAnnotation) {
+                        selectedAnnotation.formula_type = radio.value;
+                    }
+                }
+            });
+        });
+
+        function saveAnnotations() {
+            const emptyTypeIds = annotations
+                .filter(ann => ann.block_label === "formula" && (!ann.formula_type || ann.formula_type.trim() === ""))
+                .map(ann => ann.id + 1);
+            if (emptyTypeIds.length > 0) {
+                alert(`${emptyTypeIds.join(', ')} 的 formula_type 为空，必须选择一个 formula_type`);
+                return;
+            }
+
+            const currentImageName = imageNames[currentPage];
+            const isAlreadyAnnotated = annotatedImages.includes(currentImageName);
+            fetch('/save?anno_type=formula_info', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    imageName: currentImageName,
+                    annotations: annotations
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!isAlreadyAnnotated) {
+                    annotatedImages.push(currentImageName);
+                    annotatedCount++;
+                }
+                renderImageList();
+                updateProgressBar();
+                nextPage();
+            })
+            .catch(error => {
+                alert('保存失败，请重试。');
+                console.error('Error:', error);
+            });
+        }
+
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateImage();
+                renderImageList();
+                updateProgressBar();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < imageNames.length - 1) {
+                currentPage++;
+                updateImage();
+                renderImageList();
+                updateProgressBar();
+            }
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progress-bar');
+            const textSpan = document.getElementById('progress-text');
+            const progressPercent = (annotatedCount / imageNames.length) * 100;
+
+            progressBar.style.width = `${progressPercent}%`;
+            progressBar.textContent = `${Math.round(progressPercent)}%`;
+            textSpan.textContent = `${annotatedCount} / ${imageNames.length}`;
+        }
+
+        function renderImageList() {
+            const listContainer = document.getElementById('image-list');
+            listContainer.innerHTML = '';
+            imageNames.forEach((name, idx) => {
+                const isAlreadyAnnotated = annotatedImages.includes(name);
+                const li = document.createElement('li');
+                li.textContent = name;
+                const statusSpan = document.createElement('span');
+                statusSpan.classList.add('status-tag');
+                if (isAlreadyAnnotated) {
+                    statusSpan.classList.add('status-annotated');
+                    statusSpan.textContent = '已标注';
+                } else {
+                    statusSpan.classList.add('status-unannotated');
+                    statusSpan.textContent = '未标注';
+                }
+                li.appendChild(statusSpan);
+                li.onclick = () => {
+                    currentPage = idx;
+                    updateImage();
+                    updateProgressBar();
+                };
+                listContainer.appendChild(li);
+            });
+        }
+
+        function initAnnotatedImages() {
+            for (const imageName in imageData) {
+                if (imageData.hasOwnProperty(imageName)) {
+                    const imgData = imageData[imageName];
+                    if (imgData && imgData.formula_info && Object.keys(imgData.formula_info).length > 0) {
+                        annotatedImages.push(imageName);
+                        annotatedCount++;
+                    }
+                }
+            }
+        }
+
+        function returnToMainMenu() {
+            window.location.href = '/menu';
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = image.clientWidth;
+            canvas.height = image.clientHeight;
+            drawAnnotations();
+        });
+
+        // Ctrl+Enter保存
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter'){
+                event.preventDefault();
+                saveAnnotations();
+            }
+            else if (event.key === 'Enter') {
+                event.preventDefault();
+                selectNextUnlabeledBox(annotations);
+            }
+        });
+
+        window.onload = () => {
+            initAnnotatedImages();
+            updateImage();
+            updateProgressBar();
+            renderImageList();
+        };
+    </script>
+</body>
+</html>
