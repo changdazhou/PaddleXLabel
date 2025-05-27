@@ -21,7 +21,14 @@ from flask_login import current_user, login_required, login_user
 from werkzeug.security import generate_password_hash
 
 from app.models import User
-from app.utils import get_data_file_path, load_json, load_users, save_json, save_users
+from app.utils import (
+    create_or_update_symlink,
+    get_data_file_path,
+    load_json,
+    load_users,
+    save_json,
+    save_users,
+)
 
 bp = Blueprint("main", __name__)
 IMGAREA_FOLDER = "/paddle/workspase/PaddleXLabel_v1/label_src_data/images"
@@ -38,6 +45,9 @@ def annotate_order():
     order_image_names = []
     order_info_file = get_data_file_path("order.json")
     order_info = load_json(order_info_file)
+    create_or_update_symlink(
+        os.path.abspath(IMGAREA_FOLDER), os.path.abspath("app/static/images")
+    )
     for image_name in os.listdir(IMGAREA_FOLDER):
         order_image_data[image_name] = {
             "pre_label_json": os.path.splitext(image_name)[0] + "_res.json",
