@@ -1,398 +1,260 @@
 {
-    "table_with_formula_431944.jpg": [
+    "table_with_image_584209.jpg": [
         {
             "block_bbox": [
-                250,
-                224,
-                632,
-                251
+                512,
+                98,
+                660,
+                135
             ],
-            "block_content": "5.1.5NL模型标定与结果分析",
-            "block_label": "paragraph_title",
+            "block_content": "个人简历",
+            "block_label": "doc_title",
             "id": 0,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:14.662559"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T11:58:30.836144"
         },
         {
             "block_bbox": [
-                194,
-                303,
-                1042,
-                411
+                87,
+                176,
+                1090,
+                1310
             ],
-            "block_content": "使用Biogeme软件基于极大似然估计法对模型各变量的参数进行标定，并通过t值判断模型中各变量对出行选择行为影响是否显著，通过McFadden决定系数$\\rho^{2}$ 及调整后$\\rho^{2}$ 判断模型拟合效果，最终模型标定结果如表5-7所示：",
-            "block_label": "text",
-            "id": 1,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:14.662574"
-        },
-        {
-            "block_bbox": [
-                487,
-                430,
-                756,
-                451
-            ],
-            "block_content": "表5-7NL模型参数标定结果",
-            "block_label": "figure_title",
-            "id": 2,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:14.662579"
-        },
-        {
-            "block_bbox": [
-                395,
-                459,
-                848,
-                479
-            ],
-            "block_content": "Table 5-7 Calibration results of NL model parameters ",
-            "block_label": "figure_title",
-            "id": 3,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:14.662583"
-        },
-        {
-            "block_bbox": [
-                194,
-                493,
-                1040,
-                1462
-            ],
-            "block_content": "<html><body><table><tr><td>解释变量</td><td>参数估计值</td><td>t值</td></tr><tr><td>尺度系数</td><td></td><td></td></tr><tr><td rowspan=\"3\">$\\lambda_{ 公共交通 }$</td><td>3.39</td><td>5.99</td></tr><tr><td></td><td></td></tr><tr><td>$\\lambda_{ 小汽车 }$</td><td>1.15</td></tr><tr><td>$\\lambda_{ 慢行交通 }$</td><td>1.87</td><td>5.41</td></tr><tr><td>水平2固定哑元</td><td></td><td></td></tr><tr><td>公共交通巢固定哑元 $\\theta_{1}$</td><td>1.92</td><td>11.80</td></tr><tr><td>慢行交通巢固定哑元 $\\theta_{3}$</td><td>1.37</td><td>3.49</td></tr><tr><td>水平1固定哑元</td><td></td><td></td></tr><tr><td>地铁固定哑元 $\\beta_{(2|1)}$</td><td>0.349</td><td>5.39</td></tr><tr><td>出租车固定哑元 $\\beta_{(2|2)}$</td><td>-1.46</td><td>-11.12</td></tr><tr><td>步行固定哑元 $\\beta_{(2|3)}$</td><td>1.22</td><td>3.50</td></tr><tr><td>出行特性变量</td><td></td><td></td></tr><tr><td>出行时间（小时）</td><td>-3.03</td><td>-14.39</td></tr><tr><td>出行费用（元）</td><td>-0.0243</td><td>-6.68</td></tr><tr><td>出行距离 (km)</td><td>-0.0796</td><td>-10.72</td></tr><tr><td>自行车道宽度（m）</td><td>0.02</td><td>0.13</td></tr><tr><td>骑行环境哑元BTE1（部分改善）</td><td>0.581</td><td>5.22</td></tr><tr><td>骑行环境哑元BTE2（整体改善）</td><td>0.742</td><td>4.57</td></tr></table></body></html>",
+            "block_content": "<div style=\"text-align: center;\"><table border=\"1\"><tbody><tr><td>姓名</td><td>白晶晶</td><td>性别</td><td colspan=\"3\">女</td><td>民族</td><td>汉</td><td rowspan=\"4\"><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_891_193_1079_384.jpg\" alt=\"Image\" /></div></td></tr><tr><td>政治面貌</td><td>共青团员</td><td>出生年月</td><td colspan=\"3\">1997.08</td><td>婚姻状况</td><td>未婚</td></tr><tr><td>籍贯</td><td>北京</td><td>现所在地</td><td colspan=\"3\">北京</td><td>学历</td><td>本科</td></tr><tr><td>毕业院校</td><td colspan=\"2\">苏州师范大学</td><td colspan=\"3\">专业</td><td colspan=\"2\">市场营销</td></tr><tr><td>电子邮箱</td><td colspan=\"4\">123456@gmail.com</td><td colspan=\"2\">联系电话</td><td colspan=\"2\">18888880088</td></tr><tr><td>语言能力</td><td colspan=\"4\">英语四级</td><td colspan=\"2\">计算机能力</td><td colspan=\"2\">二级</td></tr><tr><td>其他技能</td><td colspan=\"4\">PhotoShop</td><td colspan=\"2\">特长爱好</td><td colspan=\"2\">舞蹈，羽毛球</td></tr><tr><td rowspan=\"4\">教育经历</td><td>时间</td><td colspan=\"2\">学校</td><td colspan=\"4\">专业</td><td>学历/证书</td></tr><tr><td>2016-2020</td><td colspan=\"2\">苏州师范大学</td><td colspan=\"4\">市场营销</td><td>本科</td></tr><tr><td>2020-2022</td><td colspan=\"2\">苏州师范大学</td><td colspan=\"4\">营销管理</td><td>硕士研究生</td></tr><tr><td></td><td colspan=\"2\"></td><td colspan=\"4\"></td><td></td></tr><tr><td rowspan=\"3\">工作经历</td><td>时间</td><td colspan=\"2\">在何单位</td><td colspan=\"4\">具体岗位/职责</td><td>离职原因</td></tr><tr><td>2022-至今</td><td colspan=\"2\">苏州控股集团</td><td colspan=\"4\">市场运营专员</td><td></td></tr><tr><td></td><td colspan=\"2\"></td><td colspan=\"4\"></td><td></td></tr><tr><td>获奖情况</td><td colspan=\"8\">社会实践活动优秀学生 校舞蹈大赛二等奖</td></tr><tr><td>自我评价</td><td colspan=\"8\">有大型市场推广活动经验，具备较强的团队管理能力。</td></tr><tr><td>专业技能</td><td colspan=\"8\">市场营销、管理学基本功扎实，英语水平较好，了解国际市场营销。</td></tr></tbody></table></div>",
             "block_label": "table",
-            "id": 4,
+            "id": 1,
             "include_equation": "false",
             "include_photo": "true",
             "line": "full_line",
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:14.662588"
-        },
-        {
-            "block_bbox": [
-                613,
-                1580,
-                631,
-                1594
-            ],
-            "block_content": "63",
-            "block_label": "number",
-            "id": 5,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:14.662593"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T11:58:30.836155"
         }
     ],
-    "table_with_formula_661836.jpg": [
+    "table_with_image_665537.jpg": [
         {
             "block_bbox": [
-                130,
-                173,
-                1045,
-                265
+                0,
+                0,
+                830,
+                560
             ],
-            "block_content": "式中，$S_{ 水 }$ 为节水率；$W_{ 节 t}$ 为改造后第t年节水技术产生的节水量，包含非传统水源利用和节水器具节水量；$W_{ 参 }$ 为参照建筑的基准用水量。\n",
-            "block_label": "text",
+            "block_content": "<html><body><table><tr><td>序号</td><td>操作步骤</td><td>图解</td><td>序号</td><td>操作步骤</td><td>图解</td></tr><tr><td>1</td><td>3D草图生成 炉架外圈的 1/4</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_193_46_441_173.jpg\" alt=\"Image\" /></div></td><td>5</td><td>拉伸生成圈</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_653_54_808_165.jpg\" alt=\"Image\" /></div></td></tr><tr><td>2</td><td>绘制轮廓草图</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_201_195_438_297.jpg\" alt=\"Image\" /></div></td><td>6</td><td>阵列横条</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_655_190_808_301.jpg\" alt=\"Image\" /></div></td></tr><tr><td>3</td><td>扫描生成炉架 外圈的1/4实 体</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_204_322_435_421.jpg\" alt=\"Image\" /></div></td><td>7</td><td>镜像横条</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_658_317_806_428.jpg\" alt=\"Image\" /></div></td></tr><tr><td>4</td><td>镜像</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_246_443_397_554.jpg\" alt=\"Image\" /></div></td><td>8</td><td>镜像炉架</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_647_456_820_541.jpg\" alt=\"Image\" /></div></td></tr></table></body></html>",
+            "block_label": "table",
+            "id": 0,
+            "include_equation": "false",
+            "include_photo": "true",
+            "line": "full_line",
+            "is_concatenated": false,
+            "label_user": "zhouchangda",
+            "label_time": "2025-05-26T08:51:10.023304"
+        }
+    ],
+    "table_with_image_952800.jpg": [
+        {
+            "block_bbox": [
+                0,
+                0,
+                842,
+                622
+            ],
+            "block_content": "<html><body><table><tr><td colspan=\"2\">螺纹类型</td><td>牙型图</td><td>特点和应用</td></tr><tr><td rowspan=\"3\">传动螺纹</td><td>梯形 螺纹</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_182_55_556_303.jpg\" alt=\"Image\" /></div></td><td>牙型为等腰梯形，牙型角 α=30°。内、外螺纹以锥面贴 紧不易松动。与矩形螺纹相 比，传动效率略低，但工艺性 好，牙根强度高，对中性好。 如用剖分螺母，还可以调整间 隙。梯形螺纹是最常用的传动 螺纹</td></tr><tr><td>锯齿形 螺纹</td><td><div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_179_351_557_599.jpg\" alt=\"Image\" /></div></td><td>牙型为不等腰梯形，工作面 的牙侧角为3°，非工作面的牙 侧角为30°。外螺纹牙根有较 大的圆角，以减小应力集中。 内、外螺纹旋合后，大径处无 间隙，便于对中。这种螺纹兼 有矩形螺纹传动效率高、梯形 螺纹牙根强度高的特点，但只 能用于单向受力的螺纹连接或 螺旋传动中</td></tr></table></body></html>",
+            "block_label": "table",
+            "id": 0,
+            "include_equation": "false",
+            "include_photo": "true",
+            "line": "full_line",
+            "is_concatenated": false,
+            "label_user": "zhouchangda",
+            "label_time": "2025-05-26T08:51:47.382242"
+        }
+    ],
+    "table_with_formula_244684.jpg": [
+        {
+            "block_bbox": [
+                388,
+                152,
+                795,
+                175
+            ],
+            "block_content": "第四章草原资源资产负债表体系模拟应用",
+            "block_label": "header",
             "id": 0,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183854"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409077"
         },
         {
             "block_bbox": [
-                555,
-                303,
-                644,
-                370
+                335,
+                222,
+                885,
+                244
             ],
-            "block_content": "S_{能}=\\frac{E_{节t}}{E_{参}} ",
-            "block_label": "formula",
+            "block_content": "表4-5新左旗草原自然资源调节资产：气体调节价值计量",
+            "block_label": "table_title",
             "id": 1,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183867"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409089"
         },
         {
             "block_bbox": [
-                130,
-                401,
-                1058,
-                486
+                155,
+                250,
+                993,
+                506
             ],
-            "block_content": "式中，$S_{ 能 }$ 为节能率；$E_{ 节 t}$ 为改造后第t年节能技术产生的节能量；$E_{ 参 }$ 为参照建筑的基准用能量。\n",
-            "block_label": "text",
-            "id": 2,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183871"
-        },
-        {
-            "block_bbox": [
-                485,
-                505,
-                709,
-                525
-            ],
-            "block_content": "表5.1资源消耗评价指标",
-            "block_label": "figure_title",
-            "id": 3,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183876"
-        },
-        {
-            "block_bbox": [
-                131,
-                531,
-                1065,
-                634
-            ],
-            "block_content": "<html><body><table><tr><td>资源节约评价指标</td><td>评价参数</td></tr><tr><td>节能指标</td><td>节能率 $(S_{ 能 }/\\%)$</td></tr><tr><td>节水指标</td><td>节水率 $(S_{水}/\\%)$</td></tr></table></body></html>",
+            "block_content": "<html><body><table><tr><td>价值类型</td><td>计算公式</td><td>价值（万元）</td><td>比例</td></tr><tr><td>固定 价值 $\\mathrm{CO}_{2}$ $\\mathrm{V_{C}}$</td><td>$\\mathrm{V}_{\\mathrm{c}}=\\sum\\mathrm{M}_{\\mathrm{i}}\\times\\mathrm{S}_{\\mathrm{i}}\\times\\mathrm{K}_{\\mathrm{c}}\\times\\mathrm{C}\\times12/44$</td><td>403103</td><td>36.41%</td></tr><tr><td>释放 价值 $\\mathrm{V_{O}}$ $\\mathrm{O}_{2}$</td><td>$\\mathrm{V}_{\\mathrm{o}}=\\sum\\mathrm{M}_{\\mathrm{i}}\\times\\mathrm{S}_{\\mathrm{i}}\\times\\mathrm{K}_{\\mathrm{o}}\\times\\mathrm{C}_{\\mathrm{o}}$</td><td>668707</td><td>60.41%</td></tr><tr><td>吸收 价值 $SO_{2}$ $\\mathrm{V}_{S}$</td><td>$\\mathrm{Vs}=\\sum\\mathrm{M}_{\\mathrm{i}}\\times\\mathrm{S}_{\\mathrm{i}}\\times\\mathrm{Q}_{\\mathrm{s}}\\times\\mathrm{T}\\times\\mathrm{C}_{\\mathrm{s}}$</td><td>35051</td><td>3.17%</td></tr><tr><td>阻滞粉尘价值 $\\mathrm{V_{d}}$</td><td>$\\mathrm{V}_{\\mathrm{d}}=\\sum\\mathrm{I}_{\\mathrm{d}}\\times\\mathrm{S}_{\\mathrm{i}}\\times\\mathrm{C}_{\\mathrm{d}}$</td><td>110</td><td>0.01%</td></tr><tr><td>总价值 $ V_{ 气 }$</td><td>$V_{气}=V_{c}+V_{o}+V_{s}+V_{d}$</td><td>1106971</td><td>100%</td></tr></table></body></html>",
             "block_label": "table",
-            "id": 4,
+            "id": 2,
             "include_equation": "true",
             "include_photo": "false",
             "line": "fewer_line",
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183880"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409094"
         },
         {
             "block_bbox": [
-                131,
-                646,
-                384,
-                670
+                212,
+                556,
+                392,
+                580
             ],
-            "block_content": "5.1.2室内环境评价指标",
+            "block_content": "(2)水土保持价值",
+            "block_label": "paragraph_title",
+            "id": 3,
+            "is_concatenated": false,
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409099"
+        },
+        {
+            "block_bbox": [
+                165,
+                596,
+                1009,
+                700
+            ],
+            "block_content": "草原生态环境对于一个地区的水土保持有着重要的作用，为保护好一方的水土，草原可以防止土壤被雨水等侵蚀从而减少土地的废弃、也可以减少水土中的泥沙淤积并从一定程度上减轻土壤肥力流失。\n",
+            "block_label": "text",
+            "id": 4,
+            "is_concatenated": false,
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409104"
+        },
+        {
+            "block_bbox": [
+                212,
+                716,
+                460,
+                739
+            ],
+            "block_content": "①减少土地废弃的价值",
             "block_label": "paragraph_title",
             "id": 5,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183885"
-        },
-        {
-            "block_bbox": [
-                130,
-                695,
-                1072,
-                817
-            ],
-            "block_content": "建筑环境评价参数可分为室外环境评价参数与室内环境评价参数。室外环境评价参数包括室外声环境、光环境与风热环境等，此类环境在完成绿色改造后趋于稳定，通常不会发生较大幅度波动，因此本研究选取室内环境评价参数作为建筑运行阶段环境评价的指标。",
-            "block_label": "text",
-            "id": 6,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183889"
-        },
-        {
-            "block_bbox": [
-                131,
-                842,
-                1067,
-                964
-            ],
-            "block_content": "现有研究对室内环境进行评价时考虑的之中多分为声环境、光环境、热环境与空气品质，因此本研究选取等效A声压级、工作面照度、空气温度、相对湿度、CO2浓度、PM2.5浓度等具体评价参数对室内环境质量进行评价[83]，如表5.1所示。",
-            "block_label": "text",
-            "id": 7,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183894"
-        },
-        {
-            "block_bbox": [
-                485,
-                982,
-                711,
-                1002
-            ],
-            "block_content": "表5.2室内环境评价指标",
-            "block_label": "figure_title",
-            "id": 8,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183898"
-        },
-        {
-            "block_bbox": [
-                132,
-                1007,
-                1065,
-                1242
-            ],
-            "block_content": "<html><body><table><tr><td>室内环境评价指标</td><td>评价参数</td></tr><tr><td>室内声环境</td><td>等效A声压级(LA/dB)</td></tr><tr><td>室内光环境</td><td>工作面照度(I/lx)</td></tr><tr><td>室内热环境</td><td>空气温度(t/℃)</td></tr><tr><td></td><td>相对湿度(φ/%)</td></tr><tr><td>室内空气品质</td><td>CO2浓度(Cco2/ppm)</td></tr><tr><td></td><td>PM2.5浓度(CPM2.s/ppm)</td></tr></table></body></html>",
-            "block_label": "table",
-            "id": 9,
-            "include_equation": "true",
-            "include_photo": "false",
-            "line": "fewer_line",
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183902"
-        },
-        {
-            "block_bbox": [
-                131,
-                1259,
-                348,
-                1287
-            ],
-            "block_content": "5.2评价方法构建",
-            "block_label": "paragraph_title",
-            "id": 10,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183907"
-        },
-        {
-            "block_bbox": [
-                131,
-                1319,
-                384,
-                1343
-            ],
-            "block_content": "5.2.1指标评分区间划定",
-            "block_label": "paragraph_title",
-            "id": 11,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183911"
-        },
-        {
-            "block_bbox": [
-                130,
-                1368,
-                1065,
-                1490
-            ],
-            "block_content": "基于《绿色建筑评价标准》GB/T50378-2019、《既有建筑绿色改造评价标准》GB/T 51141-2015、《公共建筑节能设计标准》GB50189-2015等标准及相关研究对各项建筑绿色性能评价指标的评分准则进行确定，每项指标的评分区间为0~1，如表5.3所示。",
-            "block_label": "text",
-            "id": 12,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183916"
-        },
-        {
-            "block_bbox": [
-                994,
-                322,
-                1053,
-                345
-            ],
-            "block_content": "（5-2)",
-            "block_label": "formula_number",
-            "id": 13,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183920"
-        },
-        {
-            "block_bbox": [
-                1046,
-                1559,
-                1064,
-                1573
-            ],
-            "block_content": "55",
-            "block_label": "number",
-            "id": 14,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-25T13:56:16.183925"
-        }
-    ],
-    "table_with_formula_728857.jpg": [
-        {
-            "block_bbox": [
-                410,
-                151,
-                775,
-                171
-            ],
-            "block_content": "表5-6南宁市海绵型住区综合评价等级",
-            "block_label": "figure_title",
-            "id": 0,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-23T13:03:40.325377"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409108"
         },
         {
             "block_bbox": [
                 164,
-                191,
-                1020,
-                213
+                756,
+                1010,
+                900
             ],
-            "block_content": "Table 5-6 Levels of comprehensive evaluation for residential districts with LID strategies in Nanning.",
-            "block_label": "figure_title",
-            "id": 1,
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-23T13:03:40.325389"
-        },
-        {
-            "block_bbox": [
-                138,
-                223,
-                1050,
-                1109
-            ],
-            "block_content": "<html><body><table><tbody><tr><td>热环境等级</td><td>HIP日累计值(℃)</td><td>热岛效应</td></tr><tr><td>一级</td><td>$HIP_{总}<40$</td><td>很弱</td></tr><tr><td>二级</td><td>$40\\leq HIP_{总}<50$</td><td>较弱</td></tr><tr><td>三级</td><td>$50\\leq HIP_{总}<70$</td><td>弱</td></tr><tr><td>四级</td><td>$70\\leq HIP_{总}<80$</td><td>强</td></tr><tr><td>五级</td><td>$80\\leq HIP_{总}<120$</td><td>较强</td></tr><tr><td>六级</td><td>$120\\leq HIP_{总}$</td><td>非常强</td></tr><tr><td>雨水消纳等级</td><td>年径流总量控制率(%)</td><td>雨水消纳能力</td></tr><tr><td>一级</td><td>$95<A R_{总}$</td><td>超强</td></tr><tr><td>二级</td><td>$90<AR_{总}\\leq95$</td><td>非常强</td></tr><tr><td>三级</td><td>$85<AR_{总}\\leq90$</td><td>很强</td></tr><tr><td>四级</td><td>$80<AR_{总}\\leq85$</td><td>较强</td></tr><tr><td>五级</td><td>$75<AR_{总}\\leq80$</td><td>稍强</td></tr><tr><td>六级</td><td>$70\\leq AR_{总}\\leq75$</td><td>强</td></tr></tbody></table></body></html>",
-            "block_label": "table",
-            "id": 2,
-            "include_equation": "true",
-            "include_photo": "false",
-            "line": "fewer_line",
-            "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-23T13:03:40.325394"
-        },
-        {
-            "block_bbox": [
-                136,
-                1171,
-                1048,
-                1391
-            ],
-            "block_content": "当对某个具体项目的海绵型住区方案进行综合评价时，首先根据式(5-1)和式(5-2)计算出该方案的年径流总量控制率和HIP日累计值；其次基于表5-6将计算结果进行对照，确定该方案的热环境等级和雨水消纳等级，定性判断该设计方案的优劣。若需对该方案进行进一步的优化设计，则根据上文获取的不同下垫面热效应值（图4-10）和年径流总量控制率（表5-1）进行下垫面类型及面积占比调整，达到综合改善的目的。",
+            "block_content": "根据上文计算得出的数据，新巴尔虎左旗草原资源在2017年为人类的生产、生活所创造的、看得见的实物价值，包括其提供给牛羊等的实物价值以及牧民承包草场、出售牧草商品所获得的收入，共计365.4951亿元。则新巴尔虎左旗单位面积的平均收益可用该实物资产的总价值与草原面积计算得出。",
             "block_label": "text",
-            "id": 3,
+            "id": 6,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-23T13:03:40.325412"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409113"
         },
         {
             "block_bbox": [
-                137,
-                1415,
-                1049,
-                1488
+                212,
+                916,
+                460,
+                939
             ],
-            "block_content": "综上，本研究所提出的综合评价方法不仅可以快速预测方案设计阶段海绵型住区方",
+            "block_content": "②减少泥沙淤积的价值",
+            "block_label": "paragraph_title",
+            "id": 7,
+            "is_concatenated": false,
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409117"
+        },
+        {
+            "block_bbox": [
+                164,
+                956,
+                1010,
+                1020
+            ],
+            "block_content": "根据上文描述，泥沙淤积率一般为0.24且国家投入的单位库容工程费用为$0.67\\  元/m^3$ 。新巴尔虎左旗草原减少的土壤被侵蚀的总量为1206677.254t。",
             "block_label": "text",
-            "id": 4,
+            "id": 8,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-23T13:03:40.325418"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409122"
         },
         {
             "block_bbox": [
-                602,
-                1538,
-                620,
-                1552
+                212,
+                1036,
+                509,
+                1059
             ],
-            "block_content": "93",
+            "block_content": "③减少土壤肥力损失的价值",
+            "block_label": "paragraph_title",
+            "id": 9,
+            "is_concatenated": false,
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409127"
+        },
+        {
+            "block_bbox": [
+                164,
+                1076,
+                1008,
+                1179
+            ],
+            "block_content": "查阅相关资料可知，2017年市面上的N、P、K化肥价格分别为2470、2150、2050元，新巴尔虎左旗草原每一单位土壤中N、K、P元素的平均含量分别为1.6%、1.35%以及1.39%，而一些有机质的含量甚至达到了20.7%。",
+            "block_label": "text",
+            "id": 10,
+            "is_concatenated": false,
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409145"
+        },
+        {
+            "block_bbox": [
+                165,
+                1196,
+                1009,
+                1259
+            ],
+            "block_content": "综上所述：$V_{水土}=V_{减废}+V_{减泥}+V_{减损}$ 。对于新巴尔虎左旗中自然资源调节资产这一大类下的水土保持价值的具体各计量参数说明见表4-6：",
+            "block_label": "text",
+            "id": 11,
+            "is_concatenated": false,
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409150"
+        },
+        {
+            "block_bbox": [
+                582,
+                1515,
+                604,
+                1533
+            ],
+            "block_content": "35",
             "block_label": "number",
-            "id": 5,
+            "id": 12,
             "is_concatenated": false,
-            "label_user": "11",
-            "label_time": "2025-05-23T13:03:40.325422"
+            "label_user": "Lxxxr",
+            "label_time": "2025-05-26T12:00:01.409154"
         }
     ]
 }

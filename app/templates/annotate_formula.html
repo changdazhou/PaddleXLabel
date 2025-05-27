@@ -382,7 +382,6 @@
 
     <script>
         // 保持原接口变量和逻辑
-        const caseTypes = {{ case_types|tojson }};
         const imageData = {{ image_data|tojson }};
         const imageNames = {{ image_names|tojson }};
         let currentPage = 0;
@@ -506,14 +505,21 @@
             
                     ctx.fillStyle = '#999999';
                 }
-                ctx.font = 'bold 24px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.font = 'bold 16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
                 ctx.textAlign = 'left';
                 const textWidth = ctx.measureText(Id).width;
-                let textX = scaledX2 + 6;
-                const textY = scaledY1;
+                // 右上角偏移量
+                const offsetX = 6;
+                const offsetY = 0;
+
+                let textX = scaledX2 + offsetX;
+                const textY = scaledY1 + offsetY + 24; // 24是字体大小，确保在顶部显示
+
+                // 如果超出右边界，则将文字放在右上角的内部
                 if (textX + textWidth > canvas.width) {
-                    textX = scaledX2 - textWidth - 6;
+                    textX = scaledX2 - textWidth - offsetX;
                 }
+
                 ctx.fillText(Id, textX, textY);
             });
         }
@@ -533,7 +539,6 @@
                 const ann = annotations[nextIndex];
                 const block_label = ann.block_label;
                 if (block_label === 'formula') {
-                    console.log(ann);
                     formulaEdit.value = ann.block_content || "";
                     let latex = ann.block_content ? ann.block_content.trim() : "";
                     if (/^\$/.test(latex) && /\$$/.test(latex)) {
@@ -607,6 +612,10 @@
         // 编辑latex时同步预览和数据
         formulaEdit.addEventListener('input', function() {
             let latex = this.value.trim();
+            const selected_index = annotations.findIndex(ann => ann.selected);
+            if (selected_index !== -1) {
+                annotations[selected_index].block_content = latex;
+            }
             if (/^\$/.test(latex) && /\$$/.test(latex)) {
                 latex = latex.replace(/^\$+|\$+$/g, '');
             }
