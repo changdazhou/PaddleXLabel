@@ -434,7 +434,6 @@
 
 
     <script>
-        const caseTypes = {{ case_types|tojson }};
         const imageData = {{ image_data|tojson }};
         const imageNames = {{ image_names|tojson }};
         let currentPage = 0;
@@ -473,7 +472,6 @@
                         }
                     });        
                     selectedBlock = null;
-                    console.log(annotations);
                     drawAnnotations();
                     initializeOrderIdSelect();
                     checkbox.checked = false;
@@ -484,9 +482,12 @@
         function drawAnnotations() {
             const scaleX = image.clientWidth / image.naturalWidth;
             const scaleY = image.clientHeight / image.naturalHeight;
-
+        
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        
+            // 定义需要变成黄色的标签
+            const yellowLabels = ['header', 'header_image', 'footer', 'footer_image', 'footnote', 'number'];
+        
             annotations.forEach(annotation => {
                 const [x1, y1, x2, y2] = annotation.block_bbox;
                 const selected = annotation.selected;
@@ -495,33 +496,65 @@
                 const scaledX2 = x2 * scaleX;
                 const scaledY2 = y2 * scaleY;
                 const orderId = annotation.order_id + 1;
-
+        
+                // 判断是否属于需要变黄的标签
+                const isYellowLabel = yellowLabels.includes(annotation.block_label);
+        
+                // 判断是否为拼接（concatenated）
+                const isConcatenated = annotation.is_concatenated;
+        
+                // 设置线宽
                 ctx.lineWidth = selected ? 3 : 2;
-                ctx.strokeStyle = selected ? '#ef4444' : '#3b82f6';
-                ctx.fillStyle = selected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)';
+        
+                // 设置边框和填充颜色
+                if (isConcatenated) {
+                    ctx.strokeStyle = '#009900'; // 拼接为绿色
+                    ctx.fillStyle = 'rgba(0, 180, 0, 0.15)'; // 半透明绿色填充
+                } else if (isYellowLabel) {
+                    ctx.strokeStyle = '#999900'; // 黄色边框
+                    ctx.fillStyle = 'rgba(255, 255, 0, 0.15)'; // 半透明黄色填充
+                } else {
+                    ctx.strokeStyle = selected ? '#ef4444' : '#3b82f6';
+                    ctx.fillStyle = selected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)';
+                }
+        
                 ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
                 ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
-
-                // 绘制编号文字
-                ctx.fillStyle = selected ? '#b91c1c' : '#2563eb';
-                ctx.font = 'bold 24px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
-                ctx.textAlign = 'left';
-                const textWidth = ctx.measureText(orderId).width;
-                let textX = scaledX2 + 6;
-                const textY = scaledY1;
-                if (textX + textWidth > canvas.width) {
-                    textX = scaledX2 - textWidth - 6;
+        
+                // 设置文字颜色
+                if (isYellowLabel) {
+                    ctx.fillStyle = '#999900'; // 黄色文字
+                } else if (isConcatenated) {
+                    ctx.fillStyle = '#009900'; // 绿色文字，或者你可以根据需要调整颜色
+                } else {
+                    ctx.fillStyle = selected ? '#b91c1c' : '#2563eb';
                 }
+        
+                ctx.font = 'bold 16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.textAlign = 'left';
+        
+                const textWidth = ctx.measureText(orderId).width;
+                const offsetX = 6;
+                const offsetY = 0;
+        
+                let textX = scaledX2 + offsetX;
+                const textY = scaledY1 + offsetY;
+        
+                // 超出右边界，放左侧
+                if (textX + textWidth > canvas.width) {
+                    textX = scaledX2 - textWidth;
+                }
+        
                 ctx.fillText(orderId, textX, textY);
             });
         }
+        
 
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             let clickedIndex = null;
-            console.log(annotations)
 
             annotations.forEach((annotation, index) => {
                 const [x1, y1, x2, y2] = annotation.block_bbox.map((v, i) => {
@@ -538,7 +571,6 @@
                 annotations[clickedIndex].selected = true;
                 selectedBlock = clickedIndex;
                 orderIdSelect.value = annotations[clickedIndex].order_id;
-                console.log(orderIdSelect.value)
                 checkbox.checked = !!annotations[clickedIndex].is_concatenated;
                 drawAnnotations();
             }

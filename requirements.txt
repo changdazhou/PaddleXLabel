@@ -1,2 +1,3 @@
 Flask
-Flask-Login
+Flask_Login
+Werkzeug

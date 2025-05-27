@@ -466,7 +466,6 @@
     </div>
 
     <script>
-        const caseTypes = {{ case_types|tojson }};
         const imageData = {{ image_data|tojson }};
         const imageNames = {{ image_names|tojson }};
         let currentPage = 0;
@@ -551,14 +550,21 @@
             
                     ctx.fillStyle = '#999999';
                 }
-                ctx.font = 'bold 24px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.font = 'bold 16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
                 ctx.textAlign = 'left';
                 const textWidth = ctx.measureText(Id).width;
-                let textX = scaledX2 + 6;
-                const textY = scaledY1;
+                // 右上角偏移量
+                const offsetX = 6;
+                const offsetY = 0;
+
+                let textX = scaledX2 + offsetX;
+                const textY = scaledY1 + offsetY + 24; // 24是字体大小，确保在顶部显示
+
+                // 如果超出右边界，则将文字放在右上角的内部
                 if (textX + textWidth > canvas.width) {
-                    textX = scaledX2 - textWidth - 6;
+                    textX = scaledX2 - textWidth - offsetX;
                 }
+
                 ctx.fillText(Id, textX, textY);
             });
         }
@@ -615,6 +621,10 @@
         tableEdit.addEventListener('input', function() {
             const tableHTML = this.value.trim();
             tablePreview.innerHTML = renderMathInTable(tableHTML);
+            const selected_index = annotations.findIndex(ann => ann.selected);
+            if (selected_index !== -1) {
+                annotations[selected_index].block_content = tableHTML;
+            }
         });
 
         function saveAnnotations() {
