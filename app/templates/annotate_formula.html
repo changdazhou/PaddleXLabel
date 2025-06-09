@@ -276,7 +276,7 @@
             gap: 12px; /* 按钮间距 */
             margin-bottom: 12px;
         }
-        /* 复选框美化（保留，但改为单选按钮用样式） */
+        /* 单选按钮用样式 */
         .radio-container {
             display: flex;
             align-items: center;
@@ -302,6 +302,38 @@
             font-weight: 600;
             color: #4f46e5;
             cursor: pointer;
+        }
+        /* 复选框容器 */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: #f0f7ff;
+            border: 2px solid #4f46e5;
+            cursor: pointer;
+            min-width: 140px;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover {
+            background: #e0edff;
+            transform: translateY(-1px);
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            accent-color: #4f46e5;
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-weight: 600;
+            color: #4f46e5;
+            cursor: pointer;
+            user-select: none;
         }
         /* 响应式 */
         @media (max-width: 900px) {
@@ -360,7 +392,12 @@
             </div>
             <div class="control-block">
                 <div class="control-block-title">公式类型（formula type）</div>
-                <div class="formula-type-section" id="formula-type-section"></div>
+                <div class="formula-type-section" id="formula-type-section">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="with-chinese" />
+                        <label for="with-chinese">含有中文</label>
+                    </div>
+                </div>
             </div>
             <div class="control-block combo">
                 <!-- 旧的按钮组改为单选按钮 -->
@@ -392,6 +429,7 @@
         const image = document.getElementById('current-image');
         let annotations = [];  // 当前图像的所有标注信息
         let annotatedImages = [];
+        const checkbox = document.getElementById('with-chinese');
 
         // 新增公式相关元素
         const latexPreview = document.getElementById('latex-preview');
@@ -404,7 +442,6 @@
         const formulaTypes = [
             { value: 'handwriting', label: '手写 (handwriting)' },
             { value: 'print', label: '印刷 (print)' },
-            { value: 'include_chinese', label: '含中文 (include_chinese)' }
         ];
 
         // 动态生成单选按钮
@@ -467,6 +504,7 @@
                     latexPreview.textContent = "";
                     // 清空单选按钮的选中状态
                     document.querySelectorAll('input[name="formulaType"]').forEach(radio => radio.checked = false);
+                    checkbox.checked = false;
                 })
                 .catch(error => console.error('Error fetching JSON:', error));
         }
@@ -523,6 +561,14 @@
                 ctx.fillText(Id, textX, textY);
             });
         }
+
+        checkbox.addEventListener('change', function() {
+            const selectedAnnotation = annotations.find(ann => ann.selected);
+            if (selectedAnnotation) {
+                selectedAnnotation.include_chinese = checkbox.checked;
+                drawAnnotations();
+            }
+        });
         
         function selectNextUnlabeledBox(annotations) {
             const nextIndex = annotations.findIndex(annotation => 
@@ -539,6 +585,7 @@
                 const ann = annotations[nextIndex];
                 const block_label = ann.block_label;
                 if (block_label === 'formula') {
+                    checkbox.checked = !!ann.include_chinese;
                     formulaEdit.value = ann.block_content || "";
                     let latex = ann.block_content ? ann.block_content.trim() : "";
                     if (/^\$/.test(latex) && /\$$/.test(latex)) {
@@ -587,6 +634,7 @@
                 const block_label = ann.block_label;
                 if (block_label === 'formula') {
                     console.log(ann);
+                    checkbox.checked = !!ann.include_chinese;
                     formulaEdit.value = ann.block_content || "";
                     let latex = ann.block_content ? ann.block_content.trim() : "";
                     if (/^\$/.test(latex) && /\$$/.test(latex)) {
@@ -710,7 +758,14 @@
             imageNames.forEach((name, idx) => {
                 const isAlreadyAnnotated = annotatedImages.includes(name);
                 const li = document.createElement('li');
+                
+                // 如果名称长度大于30，省略前面的部分
+                if (name.length > 40) {
+                    name = '...' + name.slice(-37);
+                }
+                
                 li.textContent = name;
+                
                 const statusSpan = document.createElement('span');
                 statusSpan.classList.add('status-tag');
                 if (isAlreadyAnnotated) {
@@ -728,7 +783,7 @@
                 };
                 listContainer.appendChild(li);
             });
-        }
+        }        
 
         function initAnnotatedImages() {
             for (const imageName in imageData) {

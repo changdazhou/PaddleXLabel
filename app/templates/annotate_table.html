@@ -807,7 +807,14 @@
             imageNames.forEach((name, idx) => {
                 const isAlreadyAnnotated = annotatedImages.includes(name);
                 const li = document.createElement('li');
+                
+                // 如果名称长度大于30，省略前面的部分
+                if (name.length > 40) {
+                    name = '...' + name.slice(-37);
+                }
+        
                 li.textContent = name;
+                
                 const statusSpan = document.createElement('span');
                 statusSpan.classList.add('status-tag');
                 if (isAlreadyAnnotated) {
@@ -817,6 +824,7 @@
                     statusSpan.classList.add('status-unannotated');
                     statusSpan.textContent = '未标注';
                 }
+                
                 li.appendChild(statusSpan);
                 li.onclick = () => {
                     currentPage = idx;
@@ -825,7 +833,7 @@
                 };
                 listContainer.appendChild(li);
             });
-        }
+        }        
 
         document.querySelectorAll('input[name="line"]').forEach((radio) => {
             radio.addEventListener('change', (event) => {

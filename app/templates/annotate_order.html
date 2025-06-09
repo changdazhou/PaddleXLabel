@@ -102,14 +102,14 @@
             position: relative;
             display: inline-block;
             max-width: 100%;
-            max-height: 90vh;
+            max-height: 80vh;
         }
 
         #current-image {
             display: block;
             width: 100%;
             height: auto;
-            max-height: 90vh;
+            max-height: 80vh;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(59,130,246,0.1);
         }
@@ -580,26 +580,8 @@
             const selectedAnnotation = annotations.find(ann => ann.selected);
             if (selectedAnnotation) {
                 selectedAnnotation.is_concatenated = checkbox.checked;
+                drawAnnotations();
             }
-        });
-
-
-        checkbox.addEventListener('change', function() {
-            const selectedAnnotation = annotations.find(ann => ann.selected);
-            if (!selectedAnnotation) return;
-        
-            const currentOrderId = selectedAnnotation.order_id;
-        
-            if (currentOrderId === newOrderId) return;
-            if (newOrderId < 0 || newOrderId >= annotations.length) {
-                console.error("无效的order_id");
-                return;
-            }
-        
-            // 只调整 order_id 字段，不改变 annotations 数组顺序
-            moveAnnotationOrderId(annotations, currentOrderId, newOrderId);
-        
-            drawAnnotations();
         });
 
         function moveAnnotationOrderId(annotations, currentOrderId, newOrderId) {
@@ -737,8 +719,14 @@
                 const isAlreadyAnnotated = annotatedImages.includes(name);
                 
                 const li = document.createElement('li');
-                li.textContent = name;
+                
+                // 如果名称长度大于30，省略前面的部分
+                if (name.length > 40) {
+                    name = '...' + name.slice(-37);
+                }
         
+                li.textContent = name;
+                
                 const statusSpan = document.createElement('span');
                 statusSpan.classList.add('status-tag');
                 if (isAlreadyAnnotated) {
@@ -748,16 +736,16 @@
                     statusSpan.classList.add('status-unannotated');
                     statusSpan.textContent = '未标注';
                 }
-        
+                
                 li.appendChild(statusSpan);
-        
+                
                 li.onclick = () => {
                     currentPage = idx;
                     updateImage();
                     updateProgressBar();
                     updateOrderIds();
                 };
-        
+                
                 listContainer.appendChild(li);
             });
         }
