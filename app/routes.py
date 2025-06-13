@@ -31,12 +31,32 @@ from app.utils import (
 )
 
 bp = Blueprint("main", __name__)
-IMGAREA_FOLDER = "/paddle/workspase/PaddleXLabel_v1/label_src_data/images"
-PRE_LABEL_FOLDER = "/paddle/workspase/PaddleXLabel_v1/label_src_data/jsons"
-
 order_image_data = {}
 formula_image_data = {}
 table_image_data = {}
+
+SRC_DATA_FOLDER = None
+PRE_LABEL_FOLDER = None
+IMGAREA_FOLDER = None
+
+
+def init_src_data(src_folder):
+    global SRC_DATA_FOLDER, PRE_LABEL_FOLDER, IMGAREA_FOLDER
+    SRC_DATA_FOLDER = src_folder
+
+    IMGAREA_FOLDER = os.path.join(SRC_DATA_FOLDER, "images")
+    PRE_LABEL_FOLDER = os.path.join(SRC_DATA_FOLDER, "jsons")
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    static_dir = os.path.join(base_dir, "static")
+
+    dst_image_dir = os.path.abspath(os.path.join(static_dir, "images"))
+
+    if os.path.exists(dst_image_dir):
+        os.system(f"rm -rf {dst_image_dir}")
+
+    os.symlink(IMGAREA_FOLDER, dst_image_dir)
 
 
 @bp.route("/annotate_order")
@@ -99,6 +119,13 @@ def get_annotation():
                 ):
                     block_info["block_content"] = labeled_info[id]["block_content"]
                     block_info["formula_type"] = labeled_info[id]["formula_type"]
+                    if labeled_info[id]["formula_type"] == "include_chinese":
+                        block_info["include_chinese"] = True
+                        block_info["formula_type"] = None
+                    else:
+                        block_info["include_chinese"] = labeled_info[id].get(
+                            "include_chinese", False
+                        )
                 elif (
                     anno_type == "table_info"
                     and labeled_info[id]["block_label"] == "table"
@@ -118,6 +145,7 @@ def get_annotation():
                     and block_info["block_label"] == "formula"
                 ):
                     block_info["formula_type"] = None
+                    block_info["include_chinese"] = False
                 elif anno_type == "table_info" and block_info["block_label"] == "table":
                     block_info["line"] = None
                     block_info["include_equation"] = None

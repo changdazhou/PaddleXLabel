@@ -11,9 +11,36 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from app import create_app
+import argparse
 
-app = create_app()
+from app import create_app
+from app.routes import init_src_data
+
+
+def get_args():
+    parser = argparse.ArgumentParser("PaddleNLP")
+    parser.add_argument(
+        "--src_data_folder",
+        type=str,
+        default="",
+        help="The path of source data folder.",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8866,
+        help="The port number of server.",
+    )
+    args = parser.parse_args()
+    return args
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8866, debug=True)
+    args = get_args()
+    init_src_data(args.src_data_folder)
+
+    app = create_app()
+
+    print(f"SRC_DATA_FOLDER: {args.src_data_folder}")
+
+    app.run(host="0.0.0.0", port=args.port, debug=True)
