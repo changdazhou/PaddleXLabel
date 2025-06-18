@@ -113,6 +113,9 @@ def get_annotation():
                 if anno_type == "order_info":
                     block_info["order_id"] = labeled_info[id]["order_id"]
                     block_info["is_concatenated"] = labeled_info[id]["is_concatenated"]
+                    block_info["block_label"] = labeled_info[id]["block_label"]
+                    block_info["block_content"] = labeled_info[id]["block_content"]
+                    block_info["block_bbox"] = labeled_info[id]["block_bbox"]
                 elif (
                     anno_type == "formula_info"
                     and labeled_info[id]["block_label"] == "formula"
@@ -345,6 +348,29 @@ def annotate_table():
         image_names=table_image_names,
         image_data=table_image_data,
     )
+
+
+@bp.route("/get-colors", methods=["GET"])
+def get_default_colors():
+    try:
+        colors_data = load_json(get_data_file_path("colors.json"))
+        return jsonify(colors_data)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Error parsing JSON"}), 500
+
+
+@bp.route("/save-colors", methods=["POST"])
+def update_default_colors():
+    try:
+        new_data = request.get_json()
+        if not new_data:
+            return jsonify({"error": "Invalid data"}), 400
+
+        save_json(get_data_file_path("colors.json"), new_data)
+
+        return jsonify({"message": "Configuration updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @bp.route("/")

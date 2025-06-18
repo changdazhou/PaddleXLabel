@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Annotation Interface</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* 全局样式 */
         html, body {
@@ -78,6 +79,7 @@
 
         /* 图片区域 */
         #image-area {
+            position: relative; /* 添加这行 */
             flex: 1 1 60%;
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(224,231,255,0.8);
@@ -105,6 +107,18 @@
             max-height: 80vh;
         }
 
+        #legend {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            pointer-events: none;
+        }
+
         #current-image {
             display: block;
             width: 100%;
@@ -129,129 +143,164 @@
             flex: 1 1 0;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             min-width: 340px;
-            max-width: 40%;
+            max-width: 430px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(99,102,241,0.08);
+            padding: 32px 26px 28px 26px;
+            margin: 0 auto;
+            align-items: stretch;
         }
-
+        
         #controls > h2 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: #4f46e5;
-            margin: 0 0 12px 0;
+            margin: 0 0 22px 0;
             font-weight: 700;
             letter-spacing: 0.5px;
+            text-align: center;
         }
-
+        
         .control-row {
             display: flex;
-            gap: 14px;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 0;
         }
-
-        /* 按钮样式 */
-        .control-button {
-            background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
-            color: #fff;
-            border: none;
-            padding: 14px 0;
-            font-size: 1.1rem;
-            font-weight: 600;
+        
+        .control-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: stretch;
+        }
+        
+        .label-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0;
+        }
+        
+        #label-select {
+            min-width: 120px;
+            width: 135px;
+            flex: 1 1 0;
             border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 
-                0 4px 12px rgba(99,102,241,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.1);
-            flex: 1;
-            margin: 0;
-            outline: none;
-        }
-
-
-        .control-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 
-                0 6px 20px rgba(99,102,241,0.3),
-                inset 0 1px 1px rgba(255,255,255,0.2);
-        }
-
-        .control-button:active {
-            transform: translateY(1px);
-            background: linear-gradient(95deg, #4f46e5 0%, #7c3aed 100%);
-        }
-
-        .control-button:disabled {
-            background: #c7d2fe;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        /* 下拉选择框 */
-        select.control-button {
+            border: 2px solid #6366f1;
             background: #f4f6ff;
             color: #4f46e5;
-            border: 2px solid #6366f1;
-            padding: 12px 16px;
-            font-size: 1.1rem;
+            font-size: 1.08rem;
             font-weight: 600;
+            padding: 11px 16px;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
+            background-position: right 14px center;
             padding-right: 40px;
+            transition: border 0.18s;
         }
-
+        
+        .label-action-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .control-button,
         .single-button {
             background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
             color: #fff;
             border: none;
-            padding: 14px 0;
-            font-size: 1.1rem;
+            padding: 12px 0;
+            font-size: 1.08rem;
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 
-                0 4px 12px rgba(99,102,241,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.1);
+            transition: all 0.22s;
+            box-shadow: 0 2px 10px rgba(99,102,241,0.13), inset 0 1px 1px rgba(255,255,255,0.07);
             margin: 0;
             outline: none;
-            padding: 14px 0;  /* 与其他按钮保持一致 */
-            font-size: 1.1rem;
             width: 100%;
-            margin-top: 8px;
-        }        
+            min-height: 38px;
+            letter-spacing: 0.2px;
+            margin-top: 0;
+        }
+        .control-button:hover,
+        .single-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99,102,241,0.18), inset 0 1px 1px rgba(255,255,255,0.17);
+        }
+        .control-button:active,
+        .single-button:active {
+            transform: translateY(1px);
+            background: linear-gradient(95deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        .control-button:disabled,
+        .single-button:disabled {
+            background: #c7d2fe;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }       
 
         /* 复选框容器 */
         .checkbox-container {
             display: flex;
             align-items: center;
-            padding: 8px 16px;
-            border-radius: 10px;
+            justify-content: flex-start; /* 改为左对齐 */
+            height: 44px;
+            min-width: 140px; /* 或者更大，如160px，根据需要调整 */
+            padding: 0 20px; /* 适当加宽左右内边距 */
+            border-radius: 12px;
             background: #f0f7ff;
             border: 2px solid #4f46e5;
             cursor: pointer;
-            min-width: 140px;
-            transition: all 0.2s ease;
+            font-size: 1.08rem;
+            font-weight: 600;
+            transition: all 0.17s;
+            gap: 8px; /* 复选框和文字间距 */
+            white-space: nowrap; /* 防止换行 */
         }
-
-        .checkbox-container:hover {
-            background: #e0edff;
-            transform: translateY(-1px);
-        }
-
+        
         .checkbox-container input[type="checkbox"] {
             accent-color: #4f46e5;
-            width: 22px;
-            height: 22px;
+            width: 24px;   /* 明显变大 */
+            height: 24px;
             margin-right: 10px;
             cursor: pointer;
         }
-
+        
         .checkbox-container label {
             font-weight: 600;
             color: #4f46e5;
             cursor: pointer;
             user-select: none;
+            font-size: 1.08rem;
+            padding-left: 0;
+        }
+        
+
+
+        .label-actions-row {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+            margin-bottom: 0;
+        }
+        #label-select {
+            min-width: 110px;
+            width: 100px;
+            flex: 1 1 0;
+        }
+        .label-action-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            justify-content: center;
         }
 
         /* 图片列表区域 */
@@ -346,6 +395,123 @@
             background: transparent;
         }
 
+        .modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 500px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        select.control-button, #label-select {
+            background: #f4f6ff;
+            color: #4f46e5;
+            border: 2px solid #6366f1;
+            font-weight: 600;
+            box-shadow: none;
+        }
+        
+        .checkbox-container {
+            background: #f4f6ff;
+            border: 2px solid #6366f1;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        
+        h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: #4f46e5;
+            text-align: center;
+        }
+        
+        #color-settings-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .color-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px; /* Reduced padding for smaller height */
+            border-radius: 8px;
+            border: 2px solid #6366f1;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: calc(33% - 10px); /* Three buttons per row */
+            height: 40px; /* Reduced height */
+            position: relative;
+            color: #fff; /* Default text color for contrast */
+            font-size: 14px;
+        }
+        
+        .color-button label {
+            pointer-events: none;
+        }
+        
+        .color-button input[type="color"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .apply-button {
+            background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 
+                0 4px 12px rgba(99,102,241,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.1);
+            margin: 20px 0 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .apply-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 6px 20px rgba(99,102,241,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.2);
+        }
+        
+
         /* 响应式设计 */
         @media (max-width: 1024px) {
             #container {
@@ -387,6 +553,34 @@
                 padding: 12px 0;
             }
         }
+
+        @media (max-width: 900px) {
+            #controls {
+                min-width: 0;
+                max-width: none;
+                width: 100%;
+                padding: 18px 10px 18px 10px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            #controls {
+                padding: 10px 2px 10px 2px;
+                gap: 13px;
+            }
+            .control-button, .single-button {
+                font-size: 0.97rem;
+                padding: 10px 0;
+            }
+            #label-select {
+                font-size: 0.97rem;
+                padding: 8px 12px;
+            }
+            .checkbox-container {
+                font-size: 0.97rem;
+                padding: 5px 7px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -403,6 +597,7 @@
                 <img id="current-image" src="{{ url_for('static', filename='images/' ~ image_names[0]) }}" alt="标注图片" />
                 <canvas id="annotation-canvas"></canvas>
             </div>
+            <div id="legend"></div>
         </div>
         
         <div id="controls">
@@ -413,8 +608,19 @@
                 </select>
                 <div class="checkbox-container">
                     <input type="checkbox" id="connect-section" />
-                    <label for="connect-section">连接前段</label>
+                    <label for="connect-section">续前段</label>
                 </div>
+            </div>
+            <div class="control-row">
+                <select id="label-select" class="control-button" onchange="updateLabel()">
+                    <option value="" disabled selected>选择标签</option>
+                    <!-- 标签选项动态填充 -->
+                </select>
+            </div>
+
+            <div class="control-row">
+                <button class="control-button" id="toggleModeButton" onclick="toggleEditMode()">修改标注框</button>
+                <button class="control-button" onclick="openColorSettings()">设置颜色</button>
             </div>
             
             <div class="control-row">
@@ -432,6 +638,18 @@
         </div>
     </div>
 
+    <div id="color-settings-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeColorSettings()">&times;</span>
+            <h2>设置标签颜色</h2>
+            <div id="color-settings-container"></div>
+            <button class="apply-button" onclick="applyColorSettings()">
+                <i class="fas fa-check"></i> 应用
+            </button>
+        </div>
+    </div>
+    
+
 
     <script>
         const imageData = {{ image_data|tojson }};
@@ -439,13 +657,21 @@
         let currentPage = 0;
         let annotatedCount = 0; // 已标注的数量
         let selectedBlock = null;
+        let isEditMode = false;
         const canvas = document.getElementById('annotation-canvas');
         const ctx = canvas.getContext('2d');
         const image = document.getElementById('current-image');
         const orderIdSelect = document.getElementById('order-id-select');
+        const labelSelect = document.getElementById('label-select');
         const checkbox = document.getElementById('connect-section');
+        let labelColors = {
+            header: { border: '#ff0000', fill: 'rgba(255, 0, 0, 0.15)', text: '#ff0000' },
+            footer: { border: '#00ff00', fill: 'rgba(0, 255, 0, 0.15)', text: '#00ff00' },
+            // 默认颜色...
+        };
         let annotations = [];  // 保存当前图像的所有标注信息
         let annotatedImages = [];
+        let dragPoint = null;
 
         function updateImage() {
             image.src = "{{ url_for('static', filename='images/') }}" + imageNames[currentPage];
@@ -455,6 +681,114 @@
                 loadAnnotations(imageNames[currentPage]);
             };
         }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const toggleModeButton = document.getElementById('toggleModeButton');
+            
+            if (isEditMode) {
+                // 当前是标注顺序模式
+                document.getElementById('annotation-canvas').style.cursor = 'move';
+                toggleModeButton.textContent = '标注顺序';
+                // 这里可以添加切换到标注顺序模式所需的其他逻辑
+            } else {
+                // 当前是标注版面模式
+                document.getElementById('annotation-canvas').style.cursor = 'default';
+                toggleModeButton.textContent = '修改标注框';
+                // 这里可以添加切换到标注版面模式所需的其他逻辑
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!isEditMode) return; // 仅在修改模式下允许操作
+        
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = image.naturalWidth / image.clientWidth;
+            const scaleY = image.naturalHeight / image.clientHeight;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+        
+            let found = null;
+            let dragWhich = null;
+            let dragIndex = null;
+            const radius = 10 * scaleX; // 适当放大圆点检测范围
+        
+            // 只允许编辑一个被选中的标注框（你界面是点击选中后再可编辑）
+            annotations.forEach((annotation, idx) => {
+                if (!annotation.selected) return;
+                const [x1, y1, x2, y2] = annotation.block_bbox;
+        
+                // 检查鼠标点是否在左上角
+                if (Math.hypot(mouseX - x1, mouseY - y1) < radius) {
+                    found = annotation;
+                    dragWhich = 'topLeft';
+                    dragIndex = idx;
+                }
+                // 检查鼠标点是否在右下角
+                else if (Math.hypot(mouseX - x2, mouseY - y2) < radius) {
+                    found = annotation;
+                    dragWhich = 'bottomRight';
+                    dragIndex = idx;
+                }
+            });
+        
+            if (found && dragWhich) {
+                function onMouseMove(moveEvent) {
+                    const moveX = (moveEvent.clientX - rect.left) * scaleX;
+                    const moveY = (moveEvent.clientY - rect.top) * scaleY;
+                    let [x1, y1, x2, y2] = found.block_bbox;
+        
+                    if (dragWhich === 'topLeft') {
+                        x1 = Math.min(moveX, x2 - 1); // 保证不反转
+                        y1 = Math.min(moveY, y2 - 1);
+                    } else if (dragWhich === 'bottomRight') {
+                        x2 = Math.max(moveX, x1 + 1);
+                        y2 = Math.max(moveY, y1 + 1);
+                    }
+                    found.block_bbox = [x1, y1, x2, y2];
+                    drawAnnotations();
+                }
+                function onMouseUp() {
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+                }
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+            }
+        });
+        
+
+        function generateLegend() {
+            const legendContainer = document.getElementById('legend');
+            legendContainer.innerHTML = ''; // 清空内容
+            
+            for (const label in labelColors) {
+                if (labelColors.hasOwnProperty(label)) {
+                    const labelColor = labelColors[label].border;
+                    const legendItem = document.createElement('div');
+                    legendItem.style.display = 'flex';
+                    legendItem.style.alignItems = 'center';
+                    legendItem.style.marginBottom = '5px';
+        
+                    const colorBox = document.createElement('span');
+                    colorBox.style.display = 'inline-block';
+                    colorBox.style.width = '12px';
+                    colorBox.style.height = '12px';
+                    colorBox.style.backgroundColor = labelColor;
+                    colorBox.style.marginRight = '8px';
+                    colorBox.style.border = '1px solid #ccc';
+                    colorBox.style.borderRadius = '3px';
+        
+                    const labelText = document.createElement('span');
+                    labelText.textContent = label;
+        
+                    legendItem.appendChild(colorBox);
+                    legendItem.appendChild(labelText);
+                    legendContainer.appendChild(legendItem);
+                }
+            }
+        }
+        
 
         function loadAnnotations(imageName) {
             fetch(`/get_annotation?image_name=${encodeURIComponent(imageName)}&anno_type=order_info`)
@@ -479,6 +813,64 @@
                 .catch(error => console.error('Error fetching JSON:', error));
         }
 
+        function openColorSettings() {
+            const modal = document.getElementById('color-settings-modal');
+            modal.style.display = 'flex';
+            
+            const container = document.getElementById('color-settings-container');
+            container.innerHTML = '';
+            
+            for (const label in labelColors) {
+                if (labelColors.hasOwnProperty(label)) {
+                    const labelColor = labelColors[label];
+                    const colorPickerHtml = `
+                        <div class="color-button" style="background-color: ${hexToRgba(labelColor.border, 0.9)};">
+                            <label>${label}</label>
+                            <input type="color" value="${labelColor.border}" oninput="updateLabelColor('${label}', this.value)">
+                        </div>
+                    `;
+                    container.innerHTML += colorPickerHtml;
+                }
+            }
+        }
+
+        function updateLabelColor(label, color) {
+            if (labelColors[label]) {
+                // 更新颜色配置
+                labelColors[label].border = color;
+                labelColors[label].fill = hexToRgba(color, 0.15); // 自动调整透明度
+                labelColors[label].text = color;
+                
+                // 找到对应的按钮并更新其背景颜色
+                const buttons = document.querySelectorAll('.color-button');
+                buttons.forEach(button => {
+                    if (button.querySelector('label').textContent === label) {
+                        button.style.backgroundColor = hexToRgba(color, 0.5);
+                    }
+                });
+                generateLegend(); // 调用生成图例的函数
+            }
+        }
+
+        function closeColorSettings() {
+            const modal = document.getElementById('color-settings-modal');
+            modal.style.display = 'none';
+        }
+
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function applyColorSettings() {
+            saveColorSettings();
+            drawAnnotations();  // 重新绘制标注框以应用新的颜色设置
+            closeColorSettings();
+        }
+        
+
         function drawAnnotations() {
             const scaleX = image.clientWidth / image.naturalWidth;
             const scaleY = image.clientHeight / image.naturalHeight;
@@ -496,39 +888,24 @@
                 const scaledX2 = x2 * scaleX;
                 const scaledY2 = y2 * scaleY;
                 const orderId = annotation.order_id + 1;
+                const label = annotation.block_label; // 获取标签
+
+
+                const labelColor = getLabelColor(label); // 获取标签对应的颜色
         
                 // 判断是否属于需要变黄的标签
                 const isYellowLabel = yellowLabels.includes(annotation.block_label);
         
-                // 判断是否为拼接（concatenated）
-                const isConcatenated = annotation.is_concatenated;
-        
                 // 设置线宽
                 ctx.lineWidth = selected ? 3 : 2;
-        
-                // 设置边框和填充颜色
-                if (isConcatenated) {
-                    ctx.strokeStyle = '#009900'; // 拼接为绿色
-                    ctx.fillStyle = 'rgba(0, 180, 0, 0.15)'; // 半透明绿色填充
-                } else if (isYellowLabel) {
-                    ctx.strokeStyle = '#999900'; // 黄色边框
-                    ctx.fillStyle = 'rgba(255, 255, 0, 0.15)'; // 半透明黄色填充
-                } else {
-                    ctx.strokeStyle = selected ? '#ef4444' : '#3b82f6';
-                    ctx.fillStyle = selected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)';
-                }
+                ctx.strokeStyle = labelColor.border;
+                ctx.fillStyle = labelColor.fill;
         
                 ctx.fillRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
                 ctx.strokeRect(scaledX1, scaledY1, scaledX2 - scaledX1, scaledY2 - scaledY1);
         
                 // 设置文字颜色
-                if (isYellowLabel) {
-                    ctx.fillStyle = '#999900'; // 黄色文字
-                } else if (isConcatenated) {
-                    ctx.fillStyle = '#009900'; // 绿色文字，或者你可以根据需要调整颜色
-                } else {
-                    ctx.fillStyle = selected ? '#b91c1c' : '#2563eb';
-                }
+                ctx.fillStyle = labelColor.text
         
                 ctx.font = 'bold 16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
                 ctx.textAlign = 'left';
@@ -546,7 +923,76 @@
                 }
         
                 ctx.fillText(orderId, textX, textY);
+
+                // 显示标签
+                //ctx.fillText(label, scaledX1, scaledY1 - 5); // 在框的上方显示标签
+
+                if (isEditMode && selected) {
+                    // 绘制左上角和右下角的圆点
+                    const radius = 6;
+                    ctx.fillStyle = labelColor.border;
+        
+                    // 左上角
+                    ctx.beginPath();
+                    ctx.arc(scaledX1, scaledY1, radius, 0, 2 * Math.PI);
+                    ctx.fill();
+        
+                    // 右下角
+                    ctx.beginPath();
+                    ctx.arc(scaledX2, scaledY2, radius, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                else if (annotation.is_concatenated) {
+                    const radius = 6; // 圆点半径
+                    const circleX = scaledX1 + radius + 2; // 左上角偏移一点 
+                    const circleY = scaledY1 + radius + 2; // 左上角偏移一点
+
+                    // 绘制圆点边框
+                    ctx.beginPath();
+                    ctx.arc(circleX, circleY, radius, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = '#00cc00'; // 圆点填充颜色
+                    ctx.fill(); 
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#006600'; // 圆点边框颜色
+                    ctx.stroke();
+                }
             });
+        }
+
+        function getLabelColor(label) {
+            return labelColors[label] || { border: '#000000', fill: 'rgba(0, 0, 0, 0.15)', text: '#000000' }; // 默认颜色
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('color-settings-modal');
+            if (event.target === modal) {
+                closeColorSettings();
+            }
+        }
+
+        function loadLabels() {
+            const labelSelect = document.getElementById('label-select');
+            labelSelect.innerHTML = ''; // 清空已有选项
+        
+            // 遍历 labelColors 的键
+            for (const label in labelColors) {
+                if (labelColors.hasOwnProperty(label)) {
+                    const option = document.createElement('option');
+                    option.value = label;
+                    option.textContent = label;
+                    labelSelect.appendChild(option);
+                }
+            }
+        }
+        
+        function updateLabel() {
+            const selectedLabel = labelSelect.value;
+            const selectedAnnotation = annotations.find(ann => ann.selected);
+        
+            if (selectedAnnotation) {
+                selectedAnnotation.block_label = selectedLabel;
+                drawAnnotations();
+            }
         }
         
 
@@ -571,6 +1017,8 @@
                 annotations[clickedIndex].selected = true;
                 selectedBlock = clickedIndex;
                 orderIdSelect.value = annotations[clickedIndex].order_id;
+                // 设置默认选中标签
+                labelSelect.value = annotations[clickedIndex].block_label || '';
                 checkbox.checked = !!annotations[clickedIndex].is_concatenated;
                 drawAnnotations();
             }
@@ -584,33 +1032,8 @@
             }
         });
 
-        function moveAnnotationOrderId(annotations, currentOrderId, newOrderId) {
-            if (!Array.isArray(annotations)) return;
-            if (currentOrderId === newOrderId) return;
         
-            // 按 order_id 升序复制
-            const ordered = [...annotations].sort((a, b) => a.order_id - b.order_id);
         
-            // 找到要移动的元素
-            const selectedIndex = ordered.findIndex(ann => ann.order_id === currentOrderId);
-            if (selectedIndex === -1) return;
-        
-            // 移动元素
-            const [selectedBlock] = ordered.splice(selectedIndex, 1);
-            const targetIndex = Math.max(0, Math.min(newOrderId, ordered.length));
-            ordered.splice(targetIndex, 0, selectedBlock);
-        
-            // 重新分配 order_id
-            ordered.forEach((ann, idx) => {
-                ann.order_id = idx;
-            });
-        
-            // 写回原数组
-            ordered.forEach(orderedAnn => {
-                const ann = annotations.find(a => a.id === orderedAnn.id);
-                if (ann) ann.order_id = orderedAnn.order_id;
-            });
-        }
         
 
         function updateOrderIds() {
@@ -762,6 +1185,53 @@
               }
             }
           }
+
+        function loadDefaultColors() {
+            fetch('/get-colors')  // 修改为你的GET路由
+                .then(response => response.json())
+                .then(colors => {
+                    // 假设 colors 是一个键值对结构，类似于 { "paragraph_title": "#ff0000" }
+                    for (const label in colors) {
+                        if (colors.hasOwnProperty(label)) {
+                            // 初始化 labelColors 对象中的颜色
+                            if (!labelColors[label]) {
+                                labelColors[label] = {};
+                            }
+                            labelColors[label].border = colors[label];
+                            labelColors[label].fill = hexToRgba(colors[label], 0.15);
+                            labelColors[label].text = colors[label];
+                        }
+                    }
+                    generateLegend(); // 调用生成图例的函数
+                    loadLabels(); // 加载标签下拉列表
+                    drawAnnotations(); // 重新绘制标注以应用新的颜色
+                })
+                .catch(error => console.error('Error loading default colors:', error));
+        }
+
+
+        function saveColorSettings() {
+            const colorConfig = {};
+            for (const label in labelColors) {
+                if (labelColors.hasOwnProperty(label)) {
+                    // 提取每个标签的边框颜色作为其配置
+                    colorConfig[label] = labelColors[label].border;
+                }
+            }
+    
+            fetch('/save-colors', {  // 修改为你的POST路由
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(colorConfig)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Color settings saved:', data.message);
+            })
+            .catch(error => console.error('Error saving color settings:', error));
+        }
         
 
         function returnToMainMenu() {
@@ -785,6 +1255,7 @@
 
         // 初始化加载
         window.onload = () => {
+            loadDefaultColors();
             initAnnotatedImages();
             updateImage();
             updateProgressBar();
