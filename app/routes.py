@@ -116,6 +116,7 @@ def get_annotation():
                     block_info["block_label"] = labeled_info[id]["block_label"]
                     block_info["block_content"] = labeled_info[id]["block_content"]
                     block_info["block_bbox"] = labeled_info[id]["block_bbox"]
+                    block_info["block_direction"] = labeled_info[id]["block_direction"]
                 elif (
                     anno_type == "formula_info"
                     and labeled_info[id]["block_label"] == "formula"
