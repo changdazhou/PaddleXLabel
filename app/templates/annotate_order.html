@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8" />
     <title>Annotation Interface</title>
+    <!-- 字体与图标库 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* 全局样式 */
+        /* ====== 全局与布局 ====== */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
-        
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #f0f4ff 0%, #f9fafb 100%);
@@ -20,36 +20,29 @@
             line-height: 1.5;
             min-height: 100vh;
         }
-
-        /* 进度条区域 */
+        /* ====== 顶部进度条 ====== */
         .progress-wrapper {
             padding: 28px 36px 20px 36px;
             display: flex;
             align-items: center;
             gap: 20px;
         }
-
         #progress-bar-container {
             flex: 1;
             background: rgba(238, 242, 255, 0.8);
             backdrop-filter: blur(8px);
             height: 32px;
             border-radius: 20px;
-            box-shadow: 
-                0 2px 10px rgba(79,70,229,0.08),
-                inset 0 1px 2px rgba(255,255,255,0.9);
+            box-shadow: 0 2px 10px rgba(79,70,229,0.08), inset 0 1px 2px rgba(255,255,255,0.9);
             overflow: hidden;
             display: flex;
             align-items: center;
         }
-
         #progress-bar {
             background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
             height: 100%;
             border-radius: 20px;
-            box-shadow: 
-                0 2px 12px rgba(99,102,241,0.3),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px rgba(99,102,241,0.3), inset 0 -2px 4px rgba(0,0,0,0.1);
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
@@ -58,7 +51,6 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
-
         #progress-text {
             font-size: 1.15rem;
             font-weight: 600;
@@ -67,8 +59,7 @@
             text-align: right;
             letter-spacing: 0.5px;
         }
-
-        /* 主容器 */
+        /* ====== 主体布局 ====== */
         #container {
             display: flex;
             gap: 32px;
@@ -76,18 +67,15 @@
             height: calc(100vh - 180px);
             min-height: 600px;
         }
-
-        /* 图片区域 */
+        /* ====== 图片显示区域 ====== */
         #image-area {
-            position: relative; /* 添加这行 */
+            position: relative;
             flex: 1 1 60%;
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(224,231,255,0.8);
             border-radius: 16px;
             padding: 20px;
-            box-shadow: 
-                0 8px 30px rgba(79,70,229,0.12),
-                0 2px 6px rgba(79,70,229,0.04);
+            box-shadow: 0 8px 30px rgba(79,70,229,0.12), 0 2px 6px rgba(79,70,229,0.04);
             transition: transform 0.2s ease;
             display: flex;
             justify-content: center;
@@ -95,50 +83,38 @@
             min-width: 300px;
             max-width: 60vw;
         }
-
-        #image-area:hover {
-            transform: translateY(-2px);
-        }
-
+        #image-area:hover { transform: translateY(-2px);}
         #image-container {
             position: relative;
             display: inline-block;
             max-width: 100%;
             max-height: 80vh;
         }
-
         #legend {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.8);
+            top: 10px; right: 10px;
+            background: rgba(255,255,255,0.8);
             padding: 10px;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             z-index: 10;
             pointer-events: none;
         }
-
         #current-image {
             display: block;
-            width: 100%;
-            height: auto;
+            width: 100%; height: auto;
             max-height: 80vh;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(59,130,246,0.1);
         }
-
         #annotation-canvas {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             border-radius: 12px;
             pointer-events: auto;
         }
-
-        /* 控制区域 */
+        /* ====== 控制面板 ====== */
         #controls {
             flex: 1 1 0;
             display: flex;
@@ -153,7 +129,6 @@
             margin: 0 auto;
             align-items: stretch;
         }
-        
         #controls > h2 {
             font-size: 1.25rem;
             color: #4f46e5;
@@ -162,15 +137,26 @@
             letter-spacing: 0.5px;
             text-align: center;
         }
-        
-        .control-row {
+        .control-row, .control-row1 {
             display: flex;
             align-items: center;
-            gap: 16px; /* 控件之间的间隔 */
+            gap: 16px;
         }
-        
-        .control-button,
-        .single-button {
+        .control-row1 { justify-content: space-between; }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            flex: 1;
+        }
+        .control-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .control-button, .single-button {
             background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
             color: #fff;
             border: none;
@@ -183,101 +169,28 @@
             box-shadow: 0 2px 10px rgba(99,102,241,0.13), inset 0 1px 1px rgba(255,255,255,0.07);
             margin: 0;
             outline: none;
-            height: 44px; /* 统一高度 */
+            height: 44px;
             letter-spacing: 0.2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            white-space: nowrap; /* 防止文字换行 */
+            white-space: nowrap;
         }
-
-        /* control-row 中的按钮 */
-        .control-row .control-button {
-            flex: 1;
-        }
-
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            flex: 1;
-        }
-
-        .control-row1 {
-            display: flex;
-            gap: 16px;
-            justify-content: space-between; /* 添加这行 */
-        }
-
-        .control-row1 .input-group {
-            flex: 1;
-            width: 100%; /* 添加这行 */
-        }
-
-        .single-button {
-            width: 100%;
-        }
-
-        .control-button:hover,
-        .single-button:hover {
+        .control-row .control-button { flex: 1; }
+        .single-button { width: 100%; }
+        .control-button:hover, .single-button:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 16px rgba(99,102,241,0.18), inset 0 1px 1px rgba(255,255,255,0.17);
         }
-        .control-button:active,
-        .single-button:active {
+        .control-button:active, .single-button:active {
             transform: translateY(1px);
             background: linear-gradient(95deg, #4f46e5 0%, #7c3aed 100%);
         }
-        .control-button:disabled,
-        .single-button:disabled {
-            background: #c7d2fe;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }       
-
-        /* 复选框容器 */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            justify-content: left; /* 居中对齐 */
-            height: 44px; /* 与其他控件统一高度 */
-            flex: 1; /* 平均分配宽度 */
-            padding: 0 20px;
-            border-radius: 12px;
-            background: #f0f7ff;
-            border: 2px solid #4f46e5;
-            cursor: pointer;
-            font-size: 1.08rem;
-            font-weight: 600;
-            transition: all 0.17s;
-            gap: 8px;
-            white-space: nowrap;
-            margin: 0;
+        .control-button:disabled, .single-button:disabled {
+            background: #c7d2fe; cursor: not-allowed; transform: none; box-shadow: none;
         }
-        
-        .checkbox-container input[type="checkbox"] {
-            accent-color: #4f46e5;
-            width: 20px; /* 稍微调小一点以适应统一高度 */
-            height: 20px;
-            margin: 0;
-            cursor: pointer;
-        }
-        
-        .checkbox-container label {
-            font-weight: 600;
-            color: #4f46e5;
-            cursor: pointer;
-            user-select: none;
-            font-size: 1.08rem;
-            margin: 0;
-        }
-        
-
-        #order-id-select,
-        #label-select,
-        #direction-select {
+        /* ====== 下拉与复选 ====== */
+        #order-id-select, #label-select, #direction-select {
             flex: 1;
             min-height: 44px;
             border-radius: 12px;
@@ -298,23 +211,54 @@
             width: 100%;
             box-sizing: border-box;
         }
-
-
-        /* 图片列表区域 */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            height: 44px;          /* 保持和select高度一致 */
+            flex: 1;
+            padding: 0 16px;       /* 减小左右内边距，更靠近select */
+            border-radius: 12px;
+            background: #f4f6ff;
+            border: 2px solid #6366f1;
+            cursor: pointer;
+            font-size: 1.08rem;
+            font-weight: 600;
+            gap: 8px;
+            white-space: nowrap;
+            margin: 0;
+            box-sizing: border-box;   /* 避免padding导致整体高度变大 */
+        }
+        .checkbox-container input[type="checkbox"] {
+            accent-color: #4f46e5;
+            width: 24px;        /* 建议24px，视觉更协调 */
+            height: 24px;
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0;     /* 防止缩小 */
+            vertical-align: middle;
+        }
+        
+        .checkbox-container label {
+            font-weight: 600;
+            color: #4f46e5;
+            cursor: pointer;
+            user-select: none;
+            font-size: 1.08rem;
+            margin: 0;
+            line-height: 44px;  /* 让文本垂直居中 */
+        }
+        /* ====== 图片列表区域 ====== */
         #image-list-window {
             margin-top: 8px;
             background: rgba(255,255,255,0.95);
             border-radius: 14px;
-            box-shadow: 
-                0 8px 30px rgba(79,70,229,0.15),
-                0 2px 8px rgba(79,70,229,0.06);
+            box-shadow: 0 8px 30px rgba(79,70,229,0.15), 0 2px 8px rgba(79,70,229,0.06);
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
             overflow: hidden;
         }
-
         #image-list-header {
             background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
             color: #fff;
@@ -324,16 +268,13 @@
             letter-spacing: 0.5px;
             font-size: 1.1rem;
         }
-
         #image-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
+            padding: 0; margin: 0;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #c7d2fe transparent;
         }
-
         #image-list li {
             padding: 12px 24px;
             border-bottom: 1px solid rgba(243,244,246,0.8);
@@ -344,14 +285,12 @@
             font-size: 1.02rem;
             transition: all 0.2s ease;
         }
-
         #image-list li:hover {
             background: rgba(238,242,255,0.8);
             transform: translateX(4px);
             color: #4f46e5;
         }
-
-        /* 状态标签 */
+        /* ====== 状态标签 ====== */
         .status-tag {
             font-size: 0.9rem;
             font-weight: 600;
@@ -364,47 +303,29 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
         }
-
         .status-annotated {
             background: linear-gradient(95deg, #22c55e 0%, #16a34a 100%);
             color: #fff;
         }
-
         .status-unannotated {
             background: linear-gradient(95deg, #ef4444 0%, #dc2626 100%);
             color: #fff;
         }
-
-        /* 滚动条样式 */
-        #image-list::-webkit-scrollbar,
-        #controls::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #image-list::-webkit-scrollbar-thumb,
-        #controls::-webkit-scrollbar-thumb {
-            background: #c7d2fe;
-            border-radius: 4px;
-        }
-
-        #image-list::-webkit-scrollbar-track,
-        #controls::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
+        /* ====== 滚动条美化 ====== */
+        #image-list::-webkit-scrollbar, #controls::-webkit-scrollbar { width: 8px;}
+        #image-list::-webkit-scrollbar-thumb, #controls::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 4px;}
+        #image-list::-webkit-scrollbar-track, #controls::-webkit-scrollbar-track { background: transparent;}
+        /* ====== 标签颜色设置弹窗 ====== */
         .modal {
             display: flex;
             justify-content: center;
             align-items: center;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
-        
         .modal-content {
             background-color: #fff;
             padding: 20px;
@@ -413,94 +334,41 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
         }
-        
         .close {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 10px; right: 10px;
             cursor: pointer;
             font-size: 24px;
         }
-        
-        select.control-button {
-            background: #f4f6ff;
-            color: #4f46e5;
-            border: 2px solid #6366f1;
-            font-weight: 600;
-            box-shadow: none;
-        }
-
-        #label-select {
-            background-color: #f4f6ff;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 20px 20px;
-        }
-
-        .checkbox-container {
-            background: #f4f6ff;
-            border: 2px solid #6366f1;
-            color: #4f46e5;
-            font-weight: 600;
-        }
-        
-        h2 {
-            margin-top: 0;
-            font-size: 1.3rem;
-            color: #4f46e5;
-            text-align: center;
-        }
-        
         #color-settings-container {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
         }
-        
         .color-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px; /* Reduced padding for smaller height */
+            padding: 5px;
             border-radius: 8px;
             border: 2px solid #6366f1;
             cursor: pointer;
             transition: all 0.25s ease;
-            width: calc(33% - 10px); /* Three buttons per row */
-            height: 40px; /* Reduced height */
+            width: calc(33% - 10px);
+            height: 40px;
             position: relative;
-            color: #fff; /* Default text color for contrast */
+            color: #fff;
             font-size: 14px;
         }
-        
-        .color-button label {
-            pointer-events: none;
-        }
-
-        .control-label {
-            display: block;
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-        
+        .color-button label { pointer-events: none; }
         .color-button input[type="color"] {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             opacity: 0;
             cursor: pointer;
         }
-
-        .control-row1 .input-group {
-            flex: 1; /* 确保每个input-group均匀分配宽度 */
-        }
-        
         .apply-button {
             background: linear-gradient(95deg, #6366f1 0%, #8b5cf6 100%);
             color: #fff;
@@ -511,117 +379,62 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 
-                0 4px 12px rgba(99,102,241,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.1);
+            box-shadow: 0 4px 12px rgba(99,102,241,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
             margin: 20px 0 0;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
         .apply-button:hover {
             transform: translateY(-1px);
-            box-shadow: 
-                0 6px 20px rgba(99,102,241,0.3),
-                inset 0 1px 1px rgba(255,255,255,0.2);
+            box-shadow: 0 6px 20px rgba(99,102,241,0.3), inset 0 1px 1px rgba(255,255,255,0.2);
         }
-        
-
-        /* 响应式设计 */
+        /* ====== 图片名省略号样式，前面省略 ====== */
+        .image-name-ellipsis {
+            max-width: 80%;
+            display: inline-block;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            direction: rtl;
+            text-align: left;
+            user-select: all;
+        }
+        /* ====== 响应式支持 ====== */
         @media (max-width: 1024px) {
-            #container {
-                padding: 0 24px 24px 24px;
-                gap: 24px;
-            }
-            
-            .progress-wrapper {
-                padding: 24px;
-            }
+            #container { padding: 0 24px 24px 24px; gap: 24px;}
+            .progress-wrapper { padding: 24px;}
         }
-
         @media (max-width: 900px) {
-            #container {
-                flex-direction: column;
-                padding: 16px;
-                gap: 20px;
-            }
-
-            #controls,
-            #image-area {
-                min-width: 0;
-                max-width: none;
-                width: 100%;
-            }
+            #container { flex-direction: column; padding: 16px; gap: 20px;}
+            #controls, #image-area { min-width: 0; max-width: none; width: 100%;}
+            #controls { padding: 18px 10px 18px 10px;}
         }
-
         @media (max-width: 600px) {
-            .progress-wrapper {
-                padding: 16px 12px;
+            .progress-wrapper { padding: 16px 12px;}
+            #container { padding: 12px;}
+            .control-button, .single-button { font-size: 0.97rem; padding: 10px 0; min-height: 40px;}
+            #order-id-select, #label-select, #direction-select {
+                font-size: 0.97rem; padding: 8px 12px; padding-right: 35px; min-height: 40px; width: 100%; box-sizing: border-box;
             }
-            
-            #container {
-                padding: 12px;
-            }
-            
-            .control-button {
-                font-size: 1rem;
-                padding: 12px 0;
-            }
-        }
-
-        @media (max-width: 900px) {
-            #controls {
-                min-width: 0;
-                max-width: none;
-                width: 100%;
-                padding: 18px 10px 18px 10px;
-            }
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 600px) {
-            .control-button, 
-            .single-button {
-                font-size: 0.97rem;
-                padding: 10px 0;
-                min-height: 40px;
-            }
-            
-            #order-id-select,
-            #label-select,
-            #direction-select {
-                font-size: 0.97rem;
-                padding: 8px 12px;
-                padding-right: 35px;
-                min-height: 40px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-            
-            .checkbox-container {
-                font-size: 0.97rem;
-                padding: 0 12px;
-                height: 40px;
-            }
-            
-            .checkbox-container input[type="checkbox"] {
-                width: 18px;
-                height: 18px;
-            }
+            .checkbox-container { font-size: 0.97rem; padding: 0 12px; height: 40px;}
+            .checkbox-container input[type="checkbox"] { width: 18px; height: 18px;}
         }
     </style>
 </head>
 <body>
+    <!-- ========== 顶部进度条 ========== -->
     <div class="progress-wrapper">
         <div id="progress-bar-container">
             <div id="progress-bar"></div>
         </div>
         <span id="progress-text"></span>
     </div>
-    
+    <!-- ========== 主体区域 ========== -->
     <div id="container">
+        <!-- ====== 图片区域 ====== -->
         <div id="image-area">
             <div id="image-container">
                 <img id="current-image" src="{{ url_for('static', filename='images/' ~ image_names[0]) }}" alt="标注图片" />
@@ -629,24 +442,10 @@
             </div>
             <div id="legend"></div>
         </div>
-        
+        <!-- ====== 控制区 ====== -->
         <div id="controls">
             <h2>标注操作区</h2>
-            <div class="control-row1">
-                <div class="input-group">
-                    <label for="order-id-select" class="control-label">order_id</label>
-                    <select id="order-id-select" class="control-button" onchange="updateOrderIds()">
-                        <option value="" disabled selected>选择框序号</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="connect-section" class="control-label">is_concatenated</label>
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="connect-section" />
-                        <label for="connect-section">续前段</label>
-                    </div>
-                </div>
-            </div>
+            <!-- 标签与方向选择 -->
             <div class="control-row">
                 <div class="input-group">
                     <label for="label-select" class="control-label">block_label</label>
@@ -663,28 +462,42 @@
                     </select>
                 </div>
             </div>
-        
-
+            <!-- 顺序号与复选框 -->
+            <div class="control-row1" id="order-checkbox-row">
+                <div class="input-group" id="order-id-group">
+                    <label for="order-id-select" class="control-label">order_id</label>
+                    <select id="order-id-select" class="control-button" onchange="updateOrderIds()">
+                        <option value="" disabled selected>选择框序号</option>
+                    </select>
+                </div>
+                <div class="input-group" id="checkbox-group">
+                    <label for="connect-section" class="control-label">is_concatenated</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="connect-section" />
+                        <label for="connect-section">续前段</label>
+                    </div>
+                </div>
+            </div>
+            <!-- 编辑与配色 -->
             <div class="control-row">
                 <button class="control-button" id="toggleModeButton" onclick="toggleEditMode()">修改标注框</button>
                 <button class="control-button" onclick="openColorSettings()">修改标签颜色</button>
             </div>
-            
+            <!-- 翻页 -->
             <div class="control-row">
                 <button class="control-button" onclick="previousPage()">上一页</button>
                 <button class="control-button" onclick="nextPage()">下一页</button>
             </div>
-            
             <button class="single-button" onclick="saveAnnotations()">提交标注</button>
             <button class="single-button" onclick="returnToMainMenu()">返回主菜单</button>
-            
+            <!-- 图片列表 -->
             <div id="image-list-window">
                 <div id="image-list-header">图片列表</div>
                 <ul id="image-list"></ul>
             </div>
         </div>
     </div>
-
+    <!-- ========== 标签颜色设置弹窗 ========== -->
     <div id="color-settings-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" onclick="closeColorSettings()">&times;</span>
@@ -695,9 +508,6 @@
             </button>
         </div>
     </div>
-    
-
-
     <script>
         const imageData = {{ image_data|tojson }};
         const imageNames = {{ image_names|tojson }};
@@ -722,6 +532,12 @@
         let dragPoint = null;
         let historyStack = [];
         let historyIndex = -1;
+        let isAddingBox = false;
+        let addBoxStart = null;
+        let addBoxCurrent = null;
+        let dragMode = null; // 'move' 或 'resize'
+        let dragOffset = null; // 鼠标相对于框左上角的偏移，用于拖动
+        let dragAnnotationIndex = null; // 当前操作的标注索引
 
         function clearHistory() {
             historyStack = [];
@@ -745,21 +561,71 @@
             }
         }
 
+        function switchToEditButtons() {
+            const row = document.getElementById('order-checkbox-row');
+            row.innerHTML = `
+                <div class="input-group">
+                    <button class="control-button" id="add-box-btn" type="button">新增检测框</button>
+                </div>
+                <div class="input-group">
+                    <button class="control-button" id="delete-box-btn" type="button">删除检测框</button>
+                </div>
+            `;
+            // 绑定事件
+            document.getElementById('add-box-btn').onclick = enterAddBoxMode;
+            document.getElementById('delete-box-btn').onclick = deleteSelectedBox;
+        }
+
+        function switchToOrderCheckbox() {
+            const row = document.getElementById('order-checkbox-row');
+            row.innerHTML = `
+                <div class="input-group" id="order-id-group">
+                    <label for="order-id-select" class="control-label">order_id</label>
+                    <select id="order-id-select" class="control-button" onchange="updateOrderIds()">
+                    </select>
+                </div>
+                <div class="input-group" id="checkbox-group">
+                    <label for="connect-section" class="control-label">is_concatenated</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="connect-section" />
+                        <label for="connect-section">续前段</label>
+                    </div>
+                </div>
+            `;
+            // 重新初始化事件
+            initializeOrderIdSelect();
+            document.getElementById('connect-section').checked = false;
+            document.getElementById('connect-section').addEventListener('change', function() {
+                const selectedAnnotation = annotations.find(ann => ann.selected);
+                if (selectedAnnotation) {
+                    selectedAnnotation.is_concatenated = this.checked;
+                    drawAnnotations();
+                    saveHistory();
+                }
+            });
+        }
+        
+        function enterAddBoxMode() {
+            isAddingBox = true;
+            addBoxStart = null;
+            addBoxCurrent = null;
+            canvas.style.cursor = 'crosshair';
+            // 可选: 提示用户开始绘制检测框
+        }
+
 
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const toggleModeButton = document.getElementById('toggleModeButton');
             
             if (isEditMode) {
-                // 当前是标注顺序模式
-                document.getElementById('annotation-canvas').style.cursor = 'move';
+                document.getElementById('annotation-canvas').style.cursor = 'default';
                 toggleModeButton.textContent = '标注顺序';
-                // 这里可以添加切换到标注顺序模式所需的其他逻辑
+                switchToEditButtons(); // 切换到新增/删除按钮
             } else {
-                // 当前是标注版面模式
                 document.getElementById('annotation-canvas').style.cursor = 'default';
                 toggleModeButton.textContent = '修改标注框';
-                // 这里可以添加切换到标注版面模式所需的其他逻辑
+                switchToOrderCheckbox(); // 恢复 order_id 选择和复选框
             }
             drawAnnotations();
         }
@@ -773,24 +639,77 @@
             const mouseX = (e.clientX - rect.left) * scaleX;
             const mouseY = (e.clientY - rect.top) * scaleY;
         
+            if (isAddingBox) {
+                // 保持你已有的新增检测框逻辑不变
+                const startX = mouseX;
+                const startY = mouseY;
+                addBoxStart = [startX, startY];
+                addBoxCurrent = [startX, startY];
+        
+                function onMouseMove(moveEvent) {
+                    const moveX = (moveEvent.clientX - rect.left) * scaleX;
+                    const moveY = (moveEvent.clientY - rect.top) * scaleY;
+                    addBoxCurrent = [moveX, moveY];
+                    drawAnnotations();
+                    drawTempBox(addBoxStart, addBoxCurrent);
+                }
+                function onMouseUp(upEvent) {
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+        
+                    const upX = (upEvent.clientX - rect.left) * scaleX;
+                    const upY = (upEvent.clientY - rect.top) * scaleY;
+                    addBoxCurrent = [upX, upY];
+        
+                    if (addBoxStart && addBoxCurrent && (Math.abs(addBoxCurrent[0] - addBoxStart[0]) > 6) && (Math.abs(addBoxCurrent[1] - addBoxStart[1]) > 6)) {
+                        const x1 = Math.min(addBoxStart[0], addBoxCurrent[0]);
+                        const y1 = Math.min(addBoxStart[1], addBoxCurrent[1]);
+                        const x2 = Math.max(addBoxStart[0], addBoxCurrent[0]);
+                        const y2 = Math.max(addBoxStart[1], addBoxCurrent[1]);
+                        const newAnn = {
+                            id: Date.now() + Math.random(),
+                            block_bbox: [x1, y1, x2, y2],
+                            block_label: 'text',
+                            block_direction: 'horizontal',
+                            block_content: '',
+                            id: annotations.length,
+                            order_id: annotations.length,
+                            is_concatenated: false,
+                            selected: false
+                        };
+                        annotations.forEach(a => a.selected = false);
+                        newAnn.selected = true;
+                        selectedBlock = annotations.length;
+                        annotations.push(newAnn);
+        
+                        saveHistory();
+                        drawAnnotations();
+                    }
+                    isAddingBox = false;
+                    addBoxStart = null;
+                    addBoxCurrent = null;
+                    canvas.style.cursor = 'crosshair'; 
+                }
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                return; // 不执行后续编辑逻辑
+            }
+        
+            // 查找是否点中缩放控制点（左上、右下）
+            const radius = 10 * scaleX;
             let found = null;
             let dragWhich = null;
             let dragIndex = null;
-            const radius = 10 * scaleX; // 适当放大圆点检测范围
         
-            // 只允许编辑一个被选中的标注框（你界面是点击选中后再可编辑）
             annotations.forEach((annotation, idx) => {
                 if (!annotation.selected) return;
                 const [x1, y1, x2, y2] = annotation.block_bbox;
         
-                // 检查鼠标点是否在左上角
                 if (Math.hypot(mouseX - x1, mouseY - y1) < radius) {
                     found = annotation;
                     dragWhich = 'topLeft';
                     dragIndex = idx;
-                }
-                // 检查鼠标点是否在右下角
-                else if (Math.hypot(mouseX - x2, mouseY - y2) < radius) {
+                } else if (Math.hypot(mouseX - x2, mouseY - y2) < radius) {
                     found = annotation;
                     dragWhich = 'bottomRight';
                     dragIndex = idx;
@@ -798,30 +717,172 @@
             });
         
             if (found && dragWhich) {
+                dragMode = 'resize';
+                dragAnnotationIndex = dragIndex;
+        
                 function onMouseMove(moveEvent) {
                     const moveX = (moveEvent.clientX - rect.left) * scaleX;
                     const moveY = (moveEvent.clientY - rect.top) * scaleY;
-                    let [x1, y1, x2, y2] = found.block_bbox;
+                    let [x1, y1, x2, y2] = annotations[dragAnnotationIndex].block_bbox;
         
                     if (dragWhich === 'topLeft') {
-                        x1 = Math.min(moveX, x2 - 1); // 保证不反转
+                        x1 = Math.min(moveX, x2 - 1);
                         y1 = Math.min(moveY, y2 - 1);
                     } else if (dragWhich === 'bottomRight') {
                         x2 = Math.max(moveX, x1 + 1);
                         y2 = Math.max(moveY, y1 + 1);
                     }
-                    found.block_bbox = [x1, y1, x2, y2];
+                    annotations[dragAnnotationIndex].block_bbox = [x1, y1, x2, y2];
                     drawAnnotations();
                 }
                 function onMouseUp() {
                     window.removeEventListener('mousemove', onMouseMove);
                     window.removeEventListener('mouseup', onMouseUp);
-                    saveHistory(); // 新增
+                    saveHistory();
+                    dragMode = null;
+                    dragAnnotationIndex = null;
                 }
                 window.addEventListener('mousemove', onMouseMove);
                 window.addEventListener('mouseup', onMouseUp);
+                return;
+            }
+        
+            // 没点中控制点，检测是否点中框体内，开始拖动
+            annotations.forEach((annotation, idx) => {
+                if (!annotation.selected) return;
+                const [x1, y1, x2, y2] = annotation.block_bbox;
+                if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
+                    found = annotation;
+                    dragWhich = 'move';
+                    dragIndex = idx;
+                }
+            });
+        
+            if (found && dragWhich === 'move') {
+                dragMode = 'move';
+                dragAnnotationIndex = dragIndex;
+                const [x1, y1, x2, y2] = annotations[dragAnnotationIndex].block_bbox;
+                dragOffset = [mouseX - x1, mouseY - y1];
+        
+                function onMouseMove(moveEvent) {
+                    const moveX = (moveEvent.clientX - rect.left) * scaleX;
+                    const moveY = (moveEvent.clientY - rect.top) * scaleY;
+                    const width = annotations[dragAnnotationIndex].block_bbox[2] - annotations[dragAnnotationIndex].block_bbox[0];
+                    const height = annotations[dragAnnotationIndex].block_bbox[3] - annotations[dragAnnotationIndex].block_bbox[1];
+        
+                    let newX1 = moveX - dragOffset[0];
+                    let newY1 = moveY - dragOffset[1];
+                    let newX2 = newX1 + width;
+                    let newY2 = newY1 + height;
+        
+                    // 限制框不超出图片边界
+                    newX1 = Math.max(0, Math.min(newX1, image.naturalWidth - width));
+                    newY1 = Math.max(0, Math.min(newY1, image.naturalHeight - height));
+                    newX2 = newX1 + width;
+                    newY2 = newY1 + height;
+        
+                    annotations[dragAnnotationIndex].block_bbox = [newX1, newY1, newX2, newY2];
+                    drawAnnotations();
+                }
+                function onMouseUp() {
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+                    saveHistory();
+                    dragMode = null;
+                    dragAnnotationIndex = null;
+                    dragOffset = null;
+                }
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                return;
             }
         });
+
+
+        canvas.addEventListener('mousemove', (e) => {
+
+            if (isAddingBox) {
+                canvas.style.cursor = 'crosshair'; // 新增时为十字光标
+                return;
+            }
+            
+            if (!isEditMode) {
+                canvas.style.cursor = 'default';
+                return;
+            }
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = image.naturalWidth / image.clientWidth;
+            const scaleY = image.naturalHeight / image.clientHeight;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+        
+            const radius = 10 * scaleX;
+            let cursor = 'default';
+        
+            // 检查是否在控制点（左上、右下）
+            let onControlPoint = false;
+            annotations.forEach((annotation) => {
+                if (!annotation.selected) return;
+                const [x1, y1, x2, y2] = annotation.block_bbox;
+        
+                if (Math.hypot(mouseX - x1, mouseY - y1) < radius) {
+                    onControlPoint = true;
+                    cursor = 'nwse-resize'; // 斜方向双向箭头
+                } else if (Math.hypot(mouseX - x2, mouseY - y2) < radius) {
+                    onControlPoint = true;
+                    cursor = 'nwse-resize';
+                }
+            });
+        
+            if (!onControlPoint) {
+                // 不在控制点，检测是否在选中框体内
+                let onBox = false;
+                annotations.forEach((annotation) => {
+                    if (!annotation.selected) return;
+                    const [x1, y1, x2, y2] = annotation.block_bbox;
+                    if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
+                        onBox = true;
+                    }
+                });
+                if (onBox) {
+                    cursor = 'move'; // 四向箭头
+                } else {
+                    cursor = 'default';
+                }
+            }
+        
+            canvas.style.cursor = cursor;
+        });
+
+
+        function drawTempBox(start, current) {
+            if (!start || !current) return;
+            const scaleX = image.clientWidth / image.naturalWidth;
+            const scaleY = image.clientHeight / image.naturalHeight;
+            const x1 = start[0] * scaleX;
+            const y1 = start[1] * scaleY;
+            const x2 = current[0] * scaleX;
+            const y2 = current[1] * scaleY;
+            ctx.save();
+            ctx.strokeStyle = '#3333FF';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([8, 8]);
+            ctx.strokeRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
+            ctx.restore();
+        }
+
+        function deleteSelectedBox() {
+            const idx = annotations.findIndex(ann => ann.selected);
+            if (idx !== -1) {
+                annotations.splice(idx, 1);
+                // 重新 order_id 排序
+                annotations.forEach((ann, i) => ann.order_id = i);
+                selectedBlock = null;
+                saveHistory();
+                drawAnnotations();
+                // 若无选中，可能需要清空表单
+            }
+        }
         
 
         function generateLegend() {
@@ -1022,7 +1083,7 @@
         
                 const textWidth = ctx.measureText(orderId).width;
                 const offsetX = 6;
-                const offsetY = 20;
+                const offsetY = 10;
         
                 // 如果是垂直文本，序号要避开绿色竖条
                 let textX = scaledX2 + offsetX + (isVertical ? 6 : 0);
@@ -1216,15 +1277,26 @@
         }
 
         function initializeOrderIdSelect() {
+            const orderIdSelect = document.getElementById('order-id-select');
             orderIdSelect.innerHTML = '';
-            annotations.forEach((annotation, index) => {
+        
+            if (annotations.length === 0) {
                 const option = document.createElement('option');
-                option.value = annotation.order_id;
-                option.textContent = `Box ${annotation.order_id + 1}`;
+                option.value = '';
+                option.textContent = '暂无检测框，请先新增检测框';
+                option.disabled = true;
+                option.selected = true;
                 orderIdSelect.appendChild(option);
-            });
-            if (selectedBlock !== null) {
-                orderIdSelect.value = annotations[selectedBlock].order_id;
+            } else {
+                annotations.forEach((annotation, index) => {
+                    const option = document.createElement('option');
+                    option.value = annotation.order_id;
+                    option.textContent = `Box ${annotation.order_id + 1}`;
+                    orderIdSelect.appendChild(option);
+                });
+                if (selectedBlock !== null && annotations[selectedBlock]) {
+                    orderIdSelect.value = annotations[selectedBlock].order_id;
+                }
             }
         }
 
@@ -1302,18 +1374,18 @@
             listContainer.innerHTML = ''; // 清空
         
             imageNames.forEach((name, idx) => {
-                // 判断是否已标注：判断 imageData 中对应图片的 order_info 是否为空对象
                 const isAlreadyAnnotated = annotatedImages.includes(name);
-                
-                const li = document.createElement('li');
-                
-                // 如果名称长度大于30，省略前面的部分
-                if (name.length > 40) {
-                    name = '...' + name.slice(-37);
-                }
         
-                li.textContent = name;
-                
+                const li = document.createElement('li');
+        
+                // 创建名称span
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'image-name-ellipsis';
+                nameSpan.setAttribute('title', name);      // 鼠标悬停显示全名
+                nameSpan.setAttribute('data-fullname', name); // 用于JS复制
+                nameSpan.textContent = name;
+        
+                // 状态标签
                 const statusSpan = document.createElement('span');
                 statusSpan.classList.add('status-tag');
                 if (isAlreadyAnnotated) {
@@ -1323,16 +1395,17 @@
                     statusSpan.classList.add('status-unannotated');
                     statusSpan.textContent = '未标注';
                 }
-                
+        
+                li.appendChild(nameSpan);
                 li.appendChild(statusSpan);
-                
+        
                 li.onclick = () => {
                     currentPage = idx;
                     updateImage();
                     updateProgressBar();
                     updateOrderIds();
                 };
-                
+        
                 listContainer.appendChild(li);
             });
         }
@@ -1428,6 +1501,23 @@
             updateProgressBar();
             renderImageList();
         };
+
+        document.addEventListener('copy', function(e) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const node = range.startContainer.parentNode;
+                if (node.classList && node.classList.contains('image-name-ellipsis')) {
+                    e.preventDefault();
+                    const fullName = node.getAttribute('data-fullname') || node.textContent;
+                    if (e.clipboardData) {
+                        e.clipboardData.setData('text/plain', fullName);
+                    } else if (window.clipboardData) {
+                        window.clipboardData.setData('Text', fullName);
+                    }
+                }
+            }
+        });
         
     </script>
 </body>

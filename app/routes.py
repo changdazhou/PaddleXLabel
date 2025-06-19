@@ -104,11 +104,14 @@ def get_annotation():
     if json_path and os.path.exists(json_path):
         pre_label_info = load_json(json_path)
         parsing_res_list = []
-        for id in range(len(pre_label_info["parsing_res_list"])):
+        pre_label_ids = range(len(pre_label_info["parsing_res_list"]))
+        labeled_ids = set(range(len(labeled_info)))
+        for id in pre_label_ids:
             block_info = pre_label_info["parsing_res_list"][id]
             block_info["id"] = id
             block_info["selected"] = False
             if labeled_info:
+                labeled_ids.remove(id)
                 block_info["selected"] = True
                 if anno_type == "order_info":
                     block_info["order_id"] = labeled_info[id]["order_id"]
@@ -155,6 +158,41 @@ def get_annotation():
                     block_info["include_equation"] = None
                     block_info["include_photo"] = None
             parsing_res_list.append(block_info)
+        if labeled_info and len(labeled_ids) > 0:
+            for id in labeled_ids:
+                block_info = labeled_info[id]
+                block_info["selected"] = True
+                if anno_type == "order_info":
+                    block_info["order_id"] = labeled_info[id]["order_id"]
+                    block_info["is_concatenated"] = labeled_info[id]["is_concatenated"]
+                    block_info["block_label"] = labeled_info[id]["block_label"]
+                    block_info["block_content"] = labeled_info[id]["block_content"]
+                    block_info["block_bbox"] = labeled_info[id]["block_bbox"]
+                    block_info["block_direction"] = labeled_info[id]["block_direction"]
+                elif (
+                    anno_type == "formula_info"
+                    and labeled_info[id]["block_label"] == "formula"
+                ):
+                    block_info["block_content"] = labeled_info[id]["block_content"]
+                    block_info["formula_type"] = labeled_info[id]["formula_type"]
+                    if labeled_info[id]["formula_type"] == "include_chinese":
+                        block_info["include_chinese"] = True
+                        block_info["formula_type"] = None
+                    else:
+                        block_info["include_chinese"] = labeled_info[id].get(
+                            "include_chinese", False
+                        )
+                elif (
+                    anno_type == "table_info"
+                    and labeled_info[id]["block_label"] == "table"
+                ):
+                    block_info["line"] = labeled_info[id]["line"]
+                    block_info["block_content"] = labeled_info[id]["block_content"]
+                    block_info["include_equation"] = labeled_info[id][
+                        "include_equation"
+                    ]
+                    block_info["include_photo"] = labeled_info[id]["include_photo"]
+                parsing_res_list.append(block_info)
         data = {"parsing_res_list": parsing_res_list}
         return jsonify(data)
     else:

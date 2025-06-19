@@ -1,0 +1,22 @@
+{
+    "header": "#e67e22",
+    "footer": "#16a085",
+    "abstract": "#f7b731",
+    "algorithm": "#eb3b5a",
+    "aside_text": "#8854d0",
+    "chart": "#20bf6b",
+    "content": "#3867d6",
+    "doc_title": "#fed330",
+    "figure_title": "#b33771",
+    "footnote": "#2d98da",
+    "formula": "#fa8231",
+    "formula_number": "#fd9644",
+    "image": "#a55eea",
+    "number": "#885c00",
+    "paragraph_title": "#009432",
+    "reference": "#f8a5c2",
+    "reference_content": "#574b90",
+    "seal": "#e17055",
+    "table": "#00b894",
+    "text": "#3dc1d3"
+  }
