@@ -6,8 +6,6 @@
     <title>Login</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -32,51 +30,34 @@
             z-index: -1;
         }
 
-        .floating-shapes {
-            position: absolute;
+        /* Loading screen styles */
+        #loading-screen {
+            position: fixed;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            z-index: -1;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
-        .shape {
-            position: absolute;
-            opacity: 0.1;
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 20px;
         }
 
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            background: #6366f1;
-            border-radius: 50%;
-            top: 10%;
-            left: 10%;
-            animation: float 6s ease-in-out infinite;
+        .progress {
+            width: 50%;
         }
 
-        .shape:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            background: #8b5cf6;
-            top: 70%;
-            right: 10%;
-            animation: float 8s ease-in-out infinite reverse;
-        }
-
-        .shape:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(45deg, #6366f1, #8b5cf6);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            bottom: 10%;
-            left: 20%;
-            animation: float 10s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+        .progress-bar {
+            height: 1rem;
+            background-color: #6366f1;
+            width: 0;
+            transition: width 0.1s ease;
         }
 
         .form-container {
@@ -89,6 +70,7 @@
             width: 100%;
             position: relative;
             overflow: hidden;
+            display: none; /* Initially hidden */
         }
 
         .form-container::before {
@@ -173,6 +155,8 @@
             font-size: 1rem;
             transition: all 0.3s ease;
             background-color: #f9fafb;
+            width: 100%; /* 改为 100% */
+            box-sizing: border-box; /* 添加这一行 */
         }
 
         .form-control:focus {
@@ -334,104 +318,227 @@
             color: #6366f1;
             margin-right: 5px;
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        .error {
+            border-color: red !important;
+            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.1) !important;
+        }
     </style>
 </head>
 <body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
+
+<div id="loading-screen">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+    </div>
+</div>
 
-    <div class="form-container">
-        <div class="logo-section">
-            <div class="logo-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-        </div>
+<div class="floating-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+</div>
 
-        <div class="form-header">
-            <h1>Welcome PaddleX Label</h1>
-            <p>Please login to your account</p>
-        </div>
-
-        <form method="post">
-            <div class="form-group">
-                <label for="username">
-                    <i class="fas fa-user"></i>
-                    Username
-                </label>
-                <input type="text" class="form-control" name="username" id="username" required>
-                <i class="fas fa-envelope input-icon"></i>
-            </div>
-
-            <div class="form-group">
-                <label for="password">
-                    <i class="fas fa-lock"></i>
-                    Password
-                </label>
-                <input type="password" class="form-control" name="password" id="password" required>
-                <i class="fas fa-eye-slash input-icon" id="togglePassword"></i>
-            </div>
-
-            <div class="remember-forgot">
-                <div class="custom-checkbox">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Remember me</label>
-                </div>
-                <div class="forgot-password">
-                    <a href="#">Forgot Password?</a>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-login">
-                Sign In
-                <i class="fas fa-arrow-right ml-2"></i>
-            </button>
-        </form>
-
-        <div class="messages">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                <div class="alert" role="alert">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <ul>
-                    {% for message in messages %}
-                      <li>{{ message }}</li>
-                    {% endfor %}
-                    </ul>
-                </div>
-              {% endif %}
-            {% endwith %}
-        </div>
-
-        <div class="security-info">
-            <i class="fas fa-lock"></i>
-            Your data is protected with 256-bit encryption
-        </div>
-
-        <div class="register-section">
-            <p>Don't have an account?</p>
-            <a href="/register" class="btn-register">Create Account</a>
+<div class="form-container">
+    <div class="logo-section">
+        <div class="logo-icon">
+            <i class="fas fa-shield-alt"></i>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    <script>
-        // Toggle password visibility
-        const togglePassword = document.getElementById('togglePassword');
-        const password = document.getElementById('password');
-        
-        togglePassword.addEventListener('click', function() {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
+    <div class="form-header">
+        <h1>Welcome PaddleX Label</h1>
+        <p>Please login to your account</p>
+    </div>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="username">
+                <i class="fas fa-user"></i>
+                Username
+            </label>
+            <input type="text" class="form-control" name="username" id="username" required>
+            <i class="fas fa-envelope input-icon"></i>
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                <i class="fas fa-lock"></i>
+                Password
+            </label>
+            <input type="password" class="form-control" name="password" id="password" required>
+            <i class="fas fa-eye-slash input-icon" id="togglePassword"></i>
+        </div>
+
+        <div class="remember-forgot">
+            <div class="custom-checkbox">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
+            </div>
+            <div class="forgot-password">
+                <a href="#">Forgot Password?</a>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-login">
+            Sign In
+            <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </form>
+
+    <div class="messages">
+        <!-- Placeholder for messages -->
+        <div class="alert" role="alert" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <ul>
+                <!-- Messages will be injected here -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="security-info">
+        <i class="fas fa-lock"></i>
+        Your data is protected with 256-bit encryption
+    </div>
+
+    <div class="register-section">
+        <p>Don't have an account?</p>
+        <a href="/register" class="btn-register">Create Account</a>
+    </div>
+</div>
+
+<script>
+    // Function to load resources asynchronously and execute callback when done
+    function loadResources(callback) {
+        let resourcesLoaded = 0;
+        const totalResources = 4; // Total number of resources to load
+
+        function resourceLoaded() {
+            resourcesLoaded++;
+            if (resourcesLoaded === totalResources) {
+                callback();
+            }
+        }
+
+        const linkFontAwesome = document.createElement('link');
+        linkFontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+        linkFontAwesome.rel = 'stylesheet';
+        linkFontAwesome.onload = resourceLoaded;
+        document.head.appendChild(linkFontAwesome);
+
+        const scriptJQuery = document.createElement('script');
+        scriptJQuery.src = 'https://code.jquery.com/jquery-3.5.1.slim.min.js';
+        scriptJQuery.onload = resourceLoaded;
+        document.body.appendChild(scriptJQuery);
+
+        const scriptPopper = document.createElement('script');
+        scriptPopper.src = 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js';
+        scriptPopper.onload = resourceLoaded;
+        document.body.appendChild(scriptPopper);
+
+        const scriptBootstrap = document.createElement('script');
+        scriptBootstrap.src = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js';
+        scriptBootstrap.onload = resourceLoaded;
+        document.body.appendChild(scriptBootstrap);
+    }
+
+    // Update progress bar
+    function updateProgressBar(percentage) {
+        const progressBar = document.querySelector('.progress-bar');
+        progressBar.style.width = percentage + '%';
+    }
+
+    // Function to simulate progress and handle resource loading
+    function simulateProgress() {
+        updateProgressBar(0); // Start with 0%
+        loadResources(() => {
+            updateProgressBar(100); // Set to 100% once all resources are loaded
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.style.display = 'none';
+
+            const formContainer = document.querySelector('.form-container');
+            formContainer.style.display = 'block';
         });
-    </script>
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (progress < 100) {
+                progress += 10;
+                updateProgressBar(progress);
+            }
+            if (progress >= 100) {
+                clearInterval(interval);
+            }
+        }, 200);
+    }
+
+    // Load resources and remove loading screen once done
+    window.addEventListener('DOMContentLoaded', function() {
+        simulateProgress();
+    });
+
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止默认的表单提交行为
+
+        const username = document.getElementById('username').value;
+        const passwordField = document.getElementById('password');
+        const password = passwordField.value;
+
+        // 使用Fetch API发送异步POST请求
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ 'username': username, 'password': password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // 登录成功，重定向到主菜单
+                window.location.href = data.redirect_url;
+            } else {
+                // 登录失败，抖动密码输入框
+                passwordField.classList.add('shake', 'error');
+
+                // 移除动画类以允许重新触发
+                setTimeout(() => {
+                    passwordField.classList.remove('shake');
+                }, 500);
+
+                // 用户开始输入时移除错误样式
+                passwordField.addEventListener('input', function() {
+                    passwordField.classList.remove('error');
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
 </body>
 </html>

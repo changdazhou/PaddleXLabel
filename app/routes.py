@@ -312,9 +312,14 @@ def login():
         # password_=generate_password_hash(password)
         if user and user.check_password(password):
             login_user(user)
-            return redirect(url_for("main.menu", username=username))
+            return jsonify(
+                {
+                    "success": True,
+                    "redirect_url": url_for("main.menu", username=username),
+                }
+            )
         else:
-            flash("Invalid credentials")
+            return jsonify({"success": False, "message": "Invalid credentials"})
     return render_template("login.html")
 
 
