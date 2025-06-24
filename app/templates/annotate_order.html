@@ -440,6 +440,11 @@
                 <img id="current-image" src="{{ url_for('static', filename='images/' ~ image_names[0]) }}" alt="标注图片" />
                 <canvas id="annotation-canvas"></canvas>
             </div>
+            <!-- 新增：显示原图复选框，绝对定位到左上角 -->
+            <div class="checkbox-container" style="position:absolute; top:16px; left:16px; z-index:20; width:auto; background:rgba(255,255,255,0.8);">
+                <input type="checkbox" id="show-original-checkbox" />
+                <label for="show-original-checkbox">显示原图</label>
+            </div>
             <div id="legend"></div>
         </div>
         <!-- ====== 控制区 ====== -->
@@ -538,6 +543,16 @@
         let dragMode = null; // 'move' 或 'resize'
         let dragOffset = null; // 鼠标相对于框左上角的偏移，用于拖动
         let dragAnnotationIndex = null; // 当前操作的标注索引
+        const showOriginalCheckbox = document.getElementById('show-original-checkbox');
+        const annotationCanvas = document.getElementById('annotation-canvas');
+        annotationCanvas.style.display = 'block';
+        showOriginalCheckbox.addEventListener('change', function() {
+            if (showOriginalCheckbox.checked) {
+                annotationCanvas.style.display = 'none';
+            } else {
+                annotationCanvas.style.display = 'block';
+            }
+        });
 
         function clearHistory() {
             historyStack = [];
@@ -582,6 +597,7 @@
                 <div class="input-group" id="order-id-group">
                     <label for="order-id-select" class="control-label">order_id</label>
                     <select id="order-id-select" class="control-button" onchange="updateOrderIds()">
+                        <option value="" disabled selected>选择框序号</option>
                     </select>
                 </div>
                 <div class="input-group" id="checkbox-group">
@@ -592,10 +608,18 @@
                     </div>
                 </div>
             `;
-            // 重新初始化事件
+            // 重新获取引用
+            const orderIdSelect = document.getElementById('order-id-select');
+            const checkbox = document.getElementById('connect-section');
             initializeOrderIdSelect();
-            document.getElementById('connect-section').checked = false;
-            document.getElementById('connect-section').addEventListener('change', function() {
+
+            // 设置当前选中值
+            if (selectedBlock !== null && annotations[selectedBlock]) {
+                orderIdSelect.value = annotations[selectedBlock].order_id;
+                checkbox.checked = !!annotations[selectedBlock].is_concatenated;
+            }
+
+            checkbox.addEventListener('change', function() {
                 const selectedAnnotation = annotations.find(ann => ann.selected);
                 if (selectedAnnotation) {
                     selectedAnnotation.is_concatenated = this.checked;
@@ -603,6 +627,7 @@
                     saveHistory();
                 }
             });
+            
         }
         
         function enterAddBoxMode() {
@@ -660,6 +685,9 @@
                     const upX = (upEvent.clientX - rect.left) * scaleX;
                     const upY = (upEvent.clientY - rect.top) * scaleY;
                     addBoxCurrent = [upX, upY];
+                    const maxId = annotations.length === 0 ? 0 : Math.max(...annotations.map(a => a.id));
+                    const newId = maxId + 1;
+
         
                     if (addBoxStart && addBoxCurrent && (Math.abs(addBoxCurrent[0] - addBoxStart[0]) > 6) && (Math.abs(addBoxCurrent[1] - addBoxStart[1]) > 6)) {
                         const x1 = Math.min(addBoxStart[0], addBoxCurrent[0]);
@@ -672,7 +700,7 @@
                             block_label: 'text',
                             block_direction: 'horizontal',
                             block_content: '',
-                            id: annotations.length,
+                            id: newId,
                             order_id: annotations.length,
                             is_concatenated: false,
                             selected: false
@@ -918,6 +946,7 @@
         
 
         function loadAnnotations(imageName) {
+            const checkbox = document.getElementById('connect-section');
             fetch(`/get_annotation?image_name=${encodeURIComponent(imageName)}&anno_type=order_info`)
                 .then(response => {
                     if (!response.ok) throw new Error('Network response was not ok');
@@ -934,8 +963,10 @@
                     });        
                     selectedBlock = null;
                     drawAnnotations();
-                    initializeOrderIdSelect();
-                    checkbox.checked = false;
+                    if (!isEditMode) {
+                        initializeOrderIdSelect();
+                        checkbox.checked = false;
+                    }
                     saveHistory(); // 新增初始化状态
                 })
                 .catch(error => console.error('Error fetching JSON:', error));
@@ -1171,6 +1202,8 @@
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             let clickedIndex = null;
+            const orderIdSelect = document.getElementById('order-id-select');
+            const checkbox = document.getElementById('connect-section');
         
             annotations.forEach((annotation, index) => {
                 const [x1, y1, x2, y2] = annotation.block_bbox.map((v, i) => {
@@ -1186,12 +1219,13 @@
                 annotations.forEach(ann => ann.selected = false);
                 annotations[clickedIndex].selected = true;
                 selectedBlock = clickedIndex;
-                orderIdSelect.value = annotations[clickedIndex].order_id;
+                if (!isEditMode) {
+                    orderIdSelect.value = annotations[clickedIndex].order_id;
+                    checkbox.checked = !!annotations[clickedIndex].is_concatenated;
+                }
                 // 设置默认选中标签
                 labelSelect.value = annotations[clickedIndex].block_label || '';
-                checkbox.checked = !!annotations[clickedIndex].is_concatenated;
                 // 加载默认方向到方向选择框
-                console.log(annotations[clickedIndex].block_direction)
                 directionSelect.value = annotations[clickedIndex].block_direction || 'horizontal'; // 确保有默认值
                 drawAnnotations();
             }
@@ -1231,6 +1265,7 @@
         }
 
         function updateOrderIds() {
+            const orderIdSelect = document.getElementById('order-id-select');
             const newOrderId = parseInt(orderIdSelect.value, 10);
             const selectedAnnotation = annotations.find(ann => ann.selected);
 
@@ -1243,6 +1278,7 @@
                 return;
             }
 
+            console.log(annotations)
             moveAnnotationOrderId(annotations, currentOrderId, newOrderId);
             drawAnnotations();
             saveHistory(); // 新增
@@ -1277,6 +1313,7 @@
         }
 
         function initializeOrderIdSelect() {
+            if (isEditMode) return;
             const orderIdSelect = document.getElementById('order-id-select');
             orderIdSelect.innerHTML = '';
         
