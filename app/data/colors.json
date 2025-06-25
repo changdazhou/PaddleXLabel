@@ -7,8 +7,8 @@
     "chart": "#20bf6b",
     "content": "#2ab2a2",
     "doc_title": "#1e00ff",
-    "figure_title": "#fa8500",
-    "footnote": "#2d98da",
+    "figure_title": "#00fa2a",
+    "footnote": "#f83030",
     "formula": "#01518e",
     "formula_number": "#9e9900",
     "image": "#ff9500",
@@ -16,7 +16,8 @@
     "paragraph_title": "#ff00d0",
     "reference": "#f8a5c2",
     "reference_content": "#574b90",
-    "seal": "#fa00ab",
+    "seal": "#5bdbfb",
     "table": "#be01cb",
-    "text": "#05a7bd"
+    "text": "#05a7bd",
+    "vision_footnote": "#f8a5c2"
 }
