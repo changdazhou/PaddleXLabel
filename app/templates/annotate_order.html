@@ -529,6 +529,14 @@
             <input type="checkbox" id="show-label-checkbox" />
             <label for="show-label-checkbox">显示标签</label>
         </div>
+        <div class="checkbox-container plain">
+            <input type="checkbox" id="special-case-checkbox" />
+            <label for="special-case-checkbox">特殊图片</label>
+        </div>
+        <div class="checkbox-container plain">
+            <input type="checkbox" id="bug-case-checkbox" />
+            <label for="bug-case-checkbox">问题图片</label>
+        </div>
     </div>
     <!-- ========== 主体区域 ========== -->
     <div id="container">
@@ -614,6 +622,9 @@
         let selectedBlock = null;
         let isEditMode = false;
         let isLabelVisible = false;
+        let isBugCase = false;
+        let isSpecialCase = false;
+        let isBoxChanged = false;
         const canvas = document.getElementById('annotation-canvas');
         const ctx = canvas.getContext('2d');
         const image = document.getElementById('current-image');
@@ -662,6 +673,20 @@
             showLabelCheckbox.addEventListener('change', function() {
                 isLabelVisible = this.checked;
                 drawAnnotations();
+            });
+        }
+
+        const specialCaseCheckbox = document.getElementById('special-case-checkbox');
+        if(specialCaseCheckbox) {
+            specialCaseCheckbox.addEventListener('change', function() {
+                isSpecialCase = this.checked;
+            });
+        }
+
+        const bugCaseCheckbox = document.getElementById('bug-case-checkbox');
+        if(bugCaseCheckbox) {
+            bugCaseCheckbox.addEventListener('change', function() {
+                isBugCase = this.checked;
             });
         }
 
@@ -819,9 +844,10 @@
                         };
                         annotations.forEach(a => a.selected = false);
                         newAnn.selected = true;
+                        newAnn.coord_changed = true;
                         selectedBlock = annotations.length;
                         annotations.push(newAnn);
-        
+                        isBoxChanged = true;
                         saveHistory();
                         drawAnnotations();
                     }
@@ -873,11 +899,13 @@
                         y2 = Math.max(moveY, y1 + 1);
                     }
                     annotations[dragAnnotationIndex].block_bbox = [x1, y1, x2, y2];
+                    annotations[dragAnnotationIndex].coord_changed = true;
                     drawAnnotations();
                 }
                 function onMouseUp() {
                     window.removeEventListener('mousemove', onMouseMove);
                     window.removeEventListener('mouseup', onMouseUp);
+                    isBoxChanged = true;
                     saveHistory();
                     dragMode = null;
                     dragAnnotationIndex = null;
@@ -922,11 +950,13 @@
                     newY2 = newY1 + height;
         
                     annotations[dragAnnotationIndex].block_bbox = [newX1, newY1, newX2, newY2];
+                    annotations[dragAnnotationIndex].coord_changed = true;
                     drawAnnotations();
                 }
                 function onMouseUp() {
                     window.removeEventListener('mousemove', onMouseMove);
                     window.removeEventListener('mouseup', onMouseUp);
+                    isBoxChanged = true;
                     saveHistory();
                     dragMode = null;
                     dragAnnotationIndex = null;
@@ -1073,6 +1103,31 @@
                         if (typeof ann.is_concatenated === 'undefined') {
                             ann.is_concatenated = false;
                         }
+                        if (typeof ann.is_special_case === 'undefined') {
+                            ann.is_special_case = false;
+                        }
+                        if (typeof ann.is_bug_case === 'undefined') {
+                            ann.is_bug_case = false;
+                        }
+                        if (typeof ann.is_box_changed === 'undefined') {
+                            ann.is_box_changed = false;
+                        }
+                        const _isBoxChanged = ann.is_box_changed;
+                        const _isBugCase = ann.is_bug_case;
+                        const _isSpecialCase = ann.is_special_case;
+                        if (isBugCase !== _isBugCase){
+                            bugCaseCheckbox.checked = _isBugCase;
+                            isBugCase = _isBugCase;
+                        }
+        
+                        if (isSpecialCase !== _isSpecialCase){
+                            specialCaseCheckbox.checked = _isSpecialCase;
+                            isSpecialCase = _isSpecialCase;
+                        }
+        
+                        if (isBoxChanged !== _isBoxChanged){
+                            isBoxChanged = _isBoxChanged;
+                        }
                     });        
                     selectedBlock = null;
                     drawAnnotations();
@@ -1161,6 +1216,8 @@
                 const isVertical = annotation.block_direction === 'vertical'; // 判断是否为垂直文本
         
                 const labelColor = getLabelColor(label);
+
+                
                 
                 // 绘制填充
                 ctx.fillStyle = labelColor.fill;
@@ -1323,7 +1380,10 @@
             const selectedAnnotation = annotations.find(ann => ann.selected);
         
             if (selectedAnnotation) {
+                if (selectedAnnotation.block_label === selectedLabel) return;
                 selectedAnnotation.block_label = selectedLabel;
+                isBoxChanged = true;
+                selectedAnnotation.label_changed = true;
                 drawAnnotations();
                 saveHistory();
             }
@@ -1475,13 +1535,22 @@
         
             // 判断是否已标注过
             const isAlreadyAnnotated = annotatedImages.includes(currentImageName);
+
+            const updatedAnnotations = annotations.map(annotation => {
+                return {
+                    ...annotation,
+                    is_box_changed: isBoxChanged, // 更新或添加 is_box_changed 字段
+                    is_bug_case: isBugCase,       // 更新或添加 is_bug_case 字段
+                    is_special_case: isSpecialCase // 更新或添加 is_special_case 字段
+                };
+            });
         
             fetch('/save?anno_type=order_info', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     imageName: currentImageName,
-                    annotations: annotations
+                    annotations: updatedAnnotations
                 })
             })
             .then(response => response.json())
