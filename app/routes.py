@@ -14,7 +14,7 @@
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user
@@ -168,6 +168,7 @@ def save_annotation():
     data = request.json
     image_name = data.get("imageName")  # 注意这里和前端保持一致
     annotations = data.get("annotations")
+    labeled_image_num = data.get("labeled_image_num")
 
     if not image_name or annotations is None:
         return jsonify({"status": "error", "message": "缺少必要参数"}), 400
@@ -188,20 +189,40 @@ def save_annotation():
             )
 
     sorted_annotations = sorted(annotations, key=lambda x: x["id"])
+    now = datetime.now() + timedelta(hours=8)
+    data_time = now.strftime("%Y-%m-%d-%H-%M")
     for i, annotation in enumerate(sorted_annotations):
         annotation.pop("selected", None)
         annotation["label_user"] = current_user.username
-        annotation["label_time"] = datetime.now().isoformat()
+        annotation["label_time"] = str(data_time)
+
+    back_up_dir = get_data_file_path(f"backup")
+    if not os.path.exists(back_up_dir):
+        os.makedirs(back_up_dir)
 
     save_data = {image_name: sorted_annotations}
     if anno_type == "order_info":
         global order_image_data
-        order_image_data[image_name]["order_info"] = sorted_annotations
         try:
             order_info_file = get_data_file_path("order.json")
+            backup_order_info_file = os.path.join(
+                back_up_dir, f"order_backup_{data_time}.json"
+            )
             order_info = load_json(order_info_file)
+            if len(order_info) != labeled_image_num:
+                return (
+                    jsonify(
+                        {
+                            "status": "error",
+                            "message": f"标注数量与实际不匹配，请检查！",
+                        }
+                    ),
+                    400,
+                )
+            order_image_data[image_name]["order_info"] = sorted_annotations
             order_info.update(save_data)
             save_json(order_info_file, order_info)
+            save_json(backup_order_info_file, order_info)
         except Exception as e:
             return (
                 jsonify({"status": "error", "message": "结果保存失败：" + str(e)}),

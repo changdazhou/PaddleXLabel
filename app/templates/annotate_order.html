@@ -1550,10 +1550,18 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     imageName: currentImageName,
-                    annotations: updatedAnnotations
+                    annotations: updatedAnnotations,
+                    labeled_image_num: annotatedImages.length,
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message);
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (!isAlreadyAnnotated) {
                     annotatedImages.push(currentImageName);  // 加入已标注列表
@@ -1567,7 +1575,7 @@
                 toggleEditMode();
             })
             .catch(error => {
-                alert('保存失败，请重试。');
+                alert('保存失败，请重试。错误信息: ' + error.message);
                 console.error('Error:', error);
             });
         }
