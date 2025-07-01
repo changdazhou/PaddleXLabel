@@ -14,6 +14,7 @@
 
 import json
 import os
+import shutil
 from datetime import datetime, timedelta
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
@@ -303,6 +304,33 @@ def login():
 @login_required
 def menu():
     return render_template("menu.html")
+
+@bp.route("/load_history")
+@login_required
+def load_history():
+    history_dir = get_data_file_path("backup")
+    history_files = [f for f in os.listdir(history_dir) if f.endswith(".json")]
+    history_files.sort(reverse=True)
+    print(history_files)
+    return jsonify({"history_files": history_files})
+
+@bp.route('/load_selected_history', methods=['GET'])
+@login_required
+def load_selected_history():
+    file_name = request.args.get('file_name')
+    history_dir = get_data_file_path("backup")
+    file_path = os.path.join(history_dir, file_name)
+    base_labeled_file_path = get_data_file_path("order.json")
+    now = datetime.now() + timedelta(hours=8)
+    data_time = now.strftime("%Y-%m-%d-%H-%M")
+    base_labeled_file_path_backup = os.path.join(history_dir, f"load_backup_backup_{data_time}.json")
+    if os.path.exists(file_path):
+        print(f"Loading selected history file {file_name} ...")
+        shutil.copyfile(base_labeled_file_path, base_labeled_file_path_backup)
+        shutil.copyfile(file_path, base_labeled_file_path)
+        return jsonify("Success"), 200
+    else:
+        return jsonify("Failed"), 400
 
 
 @bp.route("/annotate_formula")

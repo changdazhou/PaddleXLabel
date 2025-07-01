@@ -505,6 +505,27 @@
             padding-left: 4px;
             line-height: 1.8;
         }
+        #load-history-container {
+            max-height: 300px; /* 设置容器的最大高度 */
+            overflow-y: auto;  /* 启用垂直滚动条 */
+            padding: 10px;     /* 添加内边距以避免内容紧贴边缘 */
+            box-sizing: border-box; /* 确保内边距不会增加总宽度 */
+        }
+
+        /* 可选：为滚动条添加样式 */
+        #load-history-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #load-history-container::-webkit-scrollbar-thumb {
+            background-color: #c7d2fe;
+            border-radius: 4px;
+        }
+
+        #load-history-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
                
     </style>
 </head>
@@ -588,6 +609,7 @@
             <div class="control-row">
                 <button class="control-button" id="toggleModeButton" onclick="toggleEditMode()">修改标注框</button>
                 <button class="control-button" onclick="openColorSettings()">修改标签颜色</button>
+                <button class="control-button" onclick="openLoadHistory()">加载历史备份</button>
             </div>
             <!-- 翻页 -->
             <div class="control-row">
@@ -611,6 +633,16 @@
             <div id="color-settings-container"></div>
             <button class="apply-button" onclick="applyColorSettings()">
                 <i class="fas fa-check"></i> 应用
+            </button>
+        </div>
+    </div>
+    <div id="load-history-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeloadHistory()">&times;</span>
+            <h2>加载历史备份</h2>
+            <div id="load-history-container"></div>
+            <button class="apply-button" onclick="loadHistoryFile()">
+                <i class="fas fa-check"></i> 加载
             </button>
         </div>
     </div>
@@ -645,6 +677,7 @@
         let isAddingBox = false;
         let addBoxStart = null;
         let addBoxCurrent = null;
+        let selectedFileName = null;
         let dragMode = null; // 'move' 或 'resize'
         let dragOffset = null; // 鼠标相对于框左上角的偏移，用于拖动
         let dragAnnotationIndex = null; // 当前操作的标注索引
@@ -1161,6 +1194,74 @@
             }
         }
 
+        function openLoadHistory() {
+            const modal = document.getElementById('load-history-modal');
+            modal.style.display = 'flex';
+
+            const container = document.getElementById('load-history-container');
+            container.innerHTML = 'Loading...';
+
+            fetch("/load_history")
+                .then(response => response.json())
+                .then(data => {
+                    container.innerHTML = '';
+
+                    data.history_files.forEach(fileName => {
+                        const historyItem = document.createElement('div');
+                        historyItem.className = 'history-item';
+                        historyItem.style.cursor = 'pointer';
+                        historyItem.style.padding = '10px';
+                        historyItem.style.borderBottom = '1px solid #ccc';
+                        historyItem.textContent = fileName;
+
+                        historyItem.onclick = function() {
+                            // 重置所有项的颜色
+                            document.querySelectorAll('.history-item').forEach(item => {
+                                item.style.color = '';
+                            });
+
+                            // 设置选中项的颜色
+                            historyItem.style.color = 'blue';
+                            selectedFileName = fileName;
+                        };
+
+                        container.appendChild(historyItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading history:', error);
+                    container.innerHTML = 'Failed to load history.';
+                });
+        }
+
+        function loadHistoryFile() {
+            if (selectedFileName) {
+                fetch(`/load_selected_history?file_name=${encodeURIComponent(selectedFileName)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        // 检查返回的状态信息
+                        if (data === "Success") {
+                            // 成功时刷新页面
+                            window.location.reload();
+                        } else {
+                            // 处理失败的情况
+                            alert('Failed to load selected history.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading selected history:', error);
+                        alert('Failed to load selected history.');
+                    });
+            }
+        }
+
+
+
+
+
         function updateLabelColor(label, color) {
             if (labelColors[label]) {
                 // 更新颜色配置
@@ -1184,6 +1285,11 @@
             modal.style.display = 'none';
         }
 
+        function closeloadHistory() {
+            const modal = document.getElementById('load-history-modal');
+            modal.style.display = 'none';
+        }
+
         function hexToRgba(hex, alpha) {
             const r = parseInt(hex.slice(1, 3), 16);
             const g = parseInt(hex.slice(3, 5), 16);
@@ -1195,6 +1301,12 @@
             saveColorSettings();
             drawAnnotations();  // 重新绘制标注框以应用新的颜色设置
             closeColorSettings();
+        }
+
+        function applyloadHistory() {
+            saveColorSettings();
+            drawAnnotations();  // 重新绘制标注框以应用新的颜色设置
+            closeloadHistory();
         }
         
 
@@ -1359,6 +1471,7 @@
                 closeColorSettings();
             }
         }
+
 
         function loadLabels() {
             const labelSelect = document.getElementById('label-select');
