@@ -1043,7 +1043,7 @@
 
         function deleteSelectedBox() {
             const idx = annotations.findIndex(ann => ann.selected);
-            if (idx !== -1) {
+            if (isEditMode && idx !== -1) {
                 currentOrderId = annotations[idx].order_id
                 newOrderId = annotations.length - 1
                 moveAnnotationOrderId(annotations, currentOrderId, newOrderId);
@@ -1450,6 +1450,23 @@
             }
         }
 
+        function redo() {
+            if (historyIndex < historyStack.length - 1) {
+                historyIndex++;
+                annotations = JSON.parse(JSON.stringify(historyStack[historyIndex]));
+        
+                annotations.forEach(ann => ann.selected = false);
+                selectedBlock = null;
+                drawAnnotations();
+                initializeOrderIdSelect();
+                checkbox.checked = false;
+                labelSelect.value = '';
+                console.log("重做成功，恢复到历史状态", historyIndex);
+            } else {
+                console.log("无更多历史记录可重做");
+            }
+        }
+
         function saveHistory() {
             historyStack = historyStack.slice(0, historyIndex + 1);
             const annotationsCopy = JSON.parse(JSON.stringify(annotations));
@@ -1739,6 +1756,14 @@
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
                 event.preventDefault();
                 undo();
+            }
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'y') {
+                event.preventDefault();
+                redo();
+            }
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'backspace') {
+                event.preventDefault();
+                deleteSelectedBox();
             }
         });
 
